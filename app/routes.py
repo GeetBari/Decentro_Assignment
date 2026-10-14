@@ -8,11 +8,11 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Expense, ExpenseReceipt, Group, GroupMember, Settlement, User
+from app.models import Expense, ExpenseReceipt, ExpenseSplit, Group, GroupMember, Settlement, User
 from app.schemas import (
     AnalyticsOut,
     BalanceOut,
@@ -124,6 +124,34 @@ def list_members(group_id: int, db: DB):
 )
 def add_expense(data: ExpenseCreate, db: DB):
     return expense_views(db, [create_expense(db, data)])[0]
+
+
+@router.delete(
+    "/expenses/{expense_id}", status_code=204, tags=["3. Expenses"], summary="Delete an expense"
+)
+def delete_expense(expense_id: int, db: DB):
+    if not (expense := db.get(Expense, expense_id)):
+        raise HTTPException(404, "Expense not found")
+    db.execute(delete(ExpenseReceipt).where(ExpenseReceipt.expense_id == expense.id))
+    db.execute(delete(ExpenseSplit).where(ExpenseSplit.expense_id == expense.id))
+    db.delete(expense)
+
+
+@router.delete(
+    "/groups/{group_id}",
+    status_code=204,
+    tags=["2. Groups"],
+    summary="Delete a group and its records",
+)
+def delete_group(group_id: int, db: DB):
+    get_group(db, group_id)
+    expense_ids = select(Expense.id).where(Expense.group_id == group_id)
+    db.execute(delete(ExpenseReceipt).where(ExpenseReceipt.expense_id.in_(expense_ids)))
+    db.execute(delete(ExpenseSplit).where(ExpenseSplit.expense_id.in_(expense_ids)))
+    db.execute(delete(Settlement).where(Settlement.group_id == group_id))
+    db.execute(delete(Expense).where(Expense.group_id == group_id))
+    db.execute(delete(GroupMember).where(GroupMember.group_id == group_id))
+    db.execute(delete(Group).where(Group.id == group_id))
 
 
 @router.put(

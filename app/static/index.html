@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#12634c">
   <title>Expense Tracker</title>
   <link rel="stylesheet" href="/static/style.css?v=green-cream-insights">
-  <script src="/static/app.js?v=receipt-upload" defer></script>
+  <script src="/static/app.js?v=delete-controls" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -21,7 +21,7 @@
     <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="export-csv" class="button subtle" disabled>↓ Export Excel</button><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
     <div class="page">
       <div id="page-error" class="error-banner" role="alert" hidden></div>
-      <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><button class="button primary" id="add-expense" disabled>+ Add expense</button></section>
+      <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><div class="heading-actions"><button class="button danger" id="delete-group" disabled>Delete group</button><button class="button primary" id="add-expense" disabled>+ Add expense</button></div></section>
       <section id="welcome" class="welcome" hidden><span class="large-icon">+</span><h2>Create your first group</h2><p>Add the people in the group, then record shared expenses.</p><button class="button primary" data-open="group-dialog">Create group</button></section>
       <div id="group-content" hidden>
         <section class="stats" aria-label="Group summary">

@@ -868,6 +868,11 @@ form input::placeholder {
 .settled { background:#f1f3ed; color:#8b9781 }
 .primary { background:#17684e }
 .primary:hover,#toast { background:#104c3a }
+.heading-actions { display:flex; gap:10px; align-items:center }
+.danger,.delete-expense { border:1px solid #dfb7af; background:#fff7f5; color:#a14d40 }
+.danger:hover,.delete-expense:hover { background:#fce9e5 }
+.delete-expense { border-radius:5px; padding:6px 8px; font-size:11px }
+.expense-tools { display:flex; justify-content:space-between; align-items:center; margin:10px 0 }
 .monthly-panel { margin:20px 0 }
 .monthly-heading { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:18px 24px }
 .monthly-heading h2 { margin:0; font-size:16px }

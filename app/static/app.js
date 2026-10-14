@@ -69,6 +69,7 @@ async function selectGroup(id) {
   $('#welcome').hidden = !!id;
   $('#group-content').hidden = !id;
   $('#add-expense').disabled = true;
+  $('#delete-group').disabled = !id;
   $('#export-csv').disabled = !id;
   if (!id) {
     $('#group-title').textContent = 'Your shared expenses';
@@ -184,7 +185,7 @@ function renderExpenses() {
   $('#expense-list').innerHTML = visible.map(expense => {
     const type = (expense.category || 'other').toLowerCase();
     const symbol = ({ food: '♧', travel: '↗', transport: '↗', stay: '⌂', shopping: '◇' })[type] || '▦';
-    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="view-split">View split</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong>${expense.receipt_url ? `<a class="receipt-link" href="${expense.receipt_url}" target="_blank" rel="noopener">View receipt ↗</a>` : ''}${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
+    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="view-split">View split</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong><div class="expense-tools">${expense.receipt_url ? `<a class="receipt-link" href="${expense.receipt_url}" target="_blank" rel="noopener">View receipt ↗</a>` : ''}<button class="delete-expense" data-delete-expense="${expense.id}">Delete expense</button></div>${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
   }).join('') || empty(state.expenses.length ? 'No matching expenses' : 'No expenses yet', state.expenses.length ? 'Try another search or category.' : state.members.length ? 'Click “Add expense” to record the first bill.' : 'Add group members before adding an expense.', '₹');
 }
 
@@ -262,6 +263,10 @@ document.addEventListener('click', event => {
   }
   const analyticsSlice = event.target.closest('[data-analytics-slice]');
   if (analyticsSlice) selectAnalyticsSlice(Number(analyticsSlice.dataset.analyticsSlice));
+  const deleteExpense = event.target.closest('[data-delete-expense]');
+  if (deleteExpense && confirm('Delete this expense? This cannot be undone.')) {
+    api(`/expenses/${deleteExpense.dataset.deleteExpense}`, {}, 'DELETE').then(() => loadWorkspace(state.group)).catch(showError);
+  }
 });
 document.addEventListener('pointerover', event => {
   const analyticsSlice = event.target.closest('[data-analytics-slice]');
@@ -277,6 +282,10 @@ $('#export-csv').addEventListener('click', () => {
 });
 $('#add-member').addEventListener('click', () => openDialog('member-dialog'));
 $('#add-expense').addEventListener('click', () => openDialog('expense-dialog'));
+$('#delete-group').addEventListener('click', async () => {
+  if (!state.group || !confirm('Delete this group and all its expenses, receipts, and payments? This cannot be undone.')) return;
+  try { await api(`/groups/${state.group}`, {}, 'DELETE'); notify('Group deleted.'); state.group = null; await loadWorkspace(); } catch (error) { showError(error); }
+});
 $('#member-mode').addEventListener('change', setMemberMode);
 $('#expense-amount').addEventListener('input', previewSplit);
 $('#split-mode').addEventListener('change', previewSplit);

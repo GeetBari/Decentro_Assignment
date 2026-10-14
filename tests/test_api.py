@@ -172,6 +172,18 @@ def test_history_filters_pagination_and_literal_search(client, trip):
     assert client.get(f"/groups/{group}/expenses?date_from=invalid").status_code == 422
 
 
+def test_delete_expense_and_group(client, trip):
+    group, _ = trip
+    expense = add_expense(client, trip).json()
+    assert client.delete(f"/expenses/{expense['id']}").status_code == 204
+    assert client.get(f"/groups/{group}/expenses").json() == []
+    assert client.delete(f"/expenses/{expense['id']}").status_code == 404
+    add_expense(client, trip)
+    assert client.delete(f"/groups/{group}").status_code == 204
+    assert client.get(f"/groups/{group}/expenses").status_code == 404
+    assert all(item["id"] != group for item in client.get("/groups").json())
+
+
 def test_monthly_summary_analytics_and_csv_export(client, trip):
     group, _ = trip
     add_expense(client, trip, "1200", description="Dinner", category="food")
