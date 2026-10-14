@@ -125,8 +125,8 @@ function render() {
 function renderInsights() {
   $('#monthly-summary').innerHTML = state.summary.map(item => {
     const label = new Date(`${item.month}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
-    return `<div class="insight-row"><div><strong>${label}</strong><small>${item.expense_count} expense${item.expense_count === 1 ? '' : 's'}</small></div><strong>${money(paise(item.total_spent))}</strong></div>`;
-  }).join('') || '<div class="empty">Add an expense to see monthly totals.</div>';
+    return `<div class="month-summary-item"><strong>${label}</strong><span>${money(paise(item.total_spent))}</span><small>${item.expense_count} expense${item.expense_count === 1 ? '' : 's'}</small></div>`;
+  }).join('') || '<span class="muted">Add an expense to see monthly totals.</span>';
   const total = paise(state.analytics.total_spent);
   const section = (title, rows) => `<div class="analytics-section"><strong>${title}</strong>${rows.map(row => {
     const amount = paise(row.total), percent = total ? Math.round((amount / total) * 100) : 0;
