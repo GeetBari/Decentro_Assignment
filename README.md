@@ -146,6 +146,7 @@ Stopping the service keeps its database volume. `requirements.txt` contains runt
 
 ## Submission documents
 
+- [Demo video](https://drive.google.com/file/d/1L4uYmp-l_88obeMvAG4dZrQ2d1IkUJug/view?usp=drive_link)
 - [Requirements checklist](docs/REQUIREMENTS.md)
 - [Architecture and database schema](docs/ARCHITECTURE.md)
 - [API guide](docs/API.md)
