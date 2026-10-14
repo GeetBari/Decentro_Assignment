@@ -71,7 +71,7 @@ async function selectGroup(id) {
   $('#add-expense').disabled = true;
   if (!id) {
     $('#group-title').textContent = 'Your shared expenses';
-    $('#group-description').textContent = 'A home for every bill and every shared plan.';
+    $('#group-description').textContent = 'Create a group to start tracking shared expenses.';
     return;
   }
   $('#group-title').textContent = state.groups.find(group => group.id === id).name;
@@ -85,7 +85,7 @@ async function selectGroup(id) {
     ]);
     if (version !== state.version) return;
     Object.assign(state, { members, expenses, balance, suggestions: plan.suggestions, payments });
-    $('#group-description').textContent = members.length ? 'Shared moments. Clear balances. Everything in one place.' : 'Start by adding the people who will share expenses.';
+    $('#group-description').textContent = members.length ? 'Track expenses, balances, and repayments for this group.' : 'Add the people who will share expenses.';
     $('#add-expense').disabled = members.length === 0;
     $('#search').value = '';
     $('#category-filter').innerHTML = '<option value="">All categories</option>' + [...new Set(expenses.map(expense => expense.category || 'Other'))].sort().map(category => `<option value="${escapeHTML(category)}">${escapeHTML(category)}</option>`).join('');
@@ -105,18 +105,18 @@ function render() {
   $('#total-spent').textContent = money(total);
   $('#total-owed').textContent = money(outstanding);
   $('#member-count').textContent = state.members.length;
-  $('#member-caption').textContent = state.members.length ? 'Everyone has a place at the table' : 'Add the people in your group';
-  $('#settle-caption').textContent = outstanding ? `${state.suggestions.length} suggested payment${state.suggestions.length === 1 ? '' : 's'} to settle up` : 'All square. No payments needed.';
+  $('#member-caption').textContent = state.members.length ? 'People in this group' : 'Add people to this group';
+  $('#settle-caption').textContent = outstanding ? `${state.suggestions.length} suggested payment${state.suggestions.length === 1 ? '' : 's'} remaining` : 'No payments needed.';
   $('#expense-count').textContent = state.expenses.length;
   renderExpenses();
   $('#suggestions').innerHTML = state.suggestions.map((payment, index) => `<article class="suggestion"><div class="suggestion-top">${avatar(payment.from_name)}<div class="suggestion-names">${escapeHTML(payment.from_name)}<span class="arrow" aria-label="pays">→</span>${escapeHTML(payment.to_name)}</div></div><div class="suggestion-bottom"><strong>${money(paise(payment.amount))}</strong><button class="record-button" data-payment="${index}">Record payment ↗</button></div></article>`).join('') || empty(state.members.length ? 'All settled up' : 'No balances yet', state.members.length ? 'Nobody owes anything right now.' : 'Add members and an expense to get started.', '✓');
-  $('#members').innerHTML = state.members.length ? `<table class="member-table"><thead><tr><th>Member</th><th>Paid for group</th><th>Their share</th><th>Balance</th></tr></thead><tbody>${state.balance.members.map(member => {
+  $('#members').innerHTML = state.members.length ? `<table class="member-table"><thead><tr><th>Member</th><th>Paid</th><th>Share</th><th>Balance</th></tr></thead><tbody>${state.balance.members.map(member => {
     const net = paise(member.net_balance);
     return `<tr><td><div class="person-cell">${avatar(member.name)}<span>${escapeHTML(labelFor({ id: member.user_id, name: member.name }))}</span></div></td><td>${money(paise(member.paid))}</td><td>${money(paise(member.share))}</td><td><span class="net-pill ${net > 0 ? 'receives' : net < 0 ? 'owes' : 'settled'}">${net > 0 ? 'Gets back ' + money(net) : net < 0 ? 'Owes ' + money(-net) : 'Settled up'}</span></td></tr>`;
-  }).join('')}</tbody></table>` : empty('Who’s joining?', 'Use “Add member” to bring your group together.', '+');
+  }).join('')}</tbody></table>` : empty('No members yet', 'Use “Add member” to add people to this group.', '+');
   const names = Object.fromEntries(state.members.map(member => [member.id, member.name]));
   $('#payment-count').textContent = state.payments.length;
-  $('#payment-list').innerHTML = state.payments.map(payment => `<div class="payment-row"><div>${escapeHTML(names[payment.from_user_id])} <span class="muted">paid</span> ${escapeHTML(names[payment.to_user_id])}<small>${dateLabel(payment.created_at)}</small></div><strong>${money(paise(payment.amount_minor ?? payment.amount))}</strong></div>`).join('') || '<div class="empty">No payments recorded yet. Completed payments will appear here.</div>';
+  $('#payment-list').innerHTML = state.payments.map(payment => `<div class="payment-row"><div>${escapeHTML(names[payment.from_user_id])} <span class="muted">paid</span> ${escapeHTML(names[payment.to_user_id])}<small>${dateLabel(payment.created_at)}</small></div><strong>${money(paise(payment.amount_minor ?? payment.amount))}</strong></div>`).join('') || '<div class="empty">No payments recorded yet.</div>';
 }
 
 function renderExpenses() {
@@ -126,8 +126,8 @@ function renderExpenses() {
   $('#expense-list').innerHTML = visible.map(expense => {
     const type = (expense.category || 'other').toLowerCase();
     const symbol = ({ food: '♧', travel: '↗', transport: '↗', stay: '⌂', shopping: '◇' })[type] || '▦';
-    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong>${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
-  }).join('') || empty(state.expenses.length ? 'No matching expenses' : 'Your first shared moment awaits', state.expenses.length ? 'Try another search or category.' : state.members.length ? 'Tap “Add expense” when someone picks up the bill.' : 'Add group members first, then your first expense.', '₹');
+    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="view-split">View split</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong>${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
+  }).join('') || empty(state.expenses.length ? 'No matching expenses' : 'No expenses yet', state.expenses.length ? 'Try another search or category.' : state.members.length ? 'Click “Add expense” to record the first bill.' : 'Add group members before adding an expense.', '₹');
 }
 
 function openDialog(id) {
@@ -217,7 +217,7 @@ $('#group-form').addEventListener('submit', event => submit(event, async data =>
   if (!name) throw new Error('Give your group a name.');
   const group = await api('/groups', { name });
   state.group = group.id;
-  return 'Group created. Add your members next.';
+  return 'Group created. Add members next.';
 }));
 $('#member-form').addEventListener('submit', event => submit(event, async (data, group) => {
   let user;
@@ -247,11 +247,11 @@ $('#expense-form').addEventListener('submit', event => submit(event, async (data
     if (values.some(value => value === null || value < 0) || values.reduce((sum, value) => sum + value, 0) !== paise(body.amount)) throw new Error('Each share must be a valid amount, and all shares must add up to the expense total.');
   }
   await api('/expenses', body);
-  return 'Expense saved. Everyone’s balance is updated.';
+  return 'Expense saved. Balances updated.';
 }));
 $('#payment-form').addEventListener('submit', event => submit(event, async (data, group) => {
   await api(`/groups/${group}/settlements`, { from_user_id: state.payment.from_user_id, to_user_id: state.payment.to_user_id, amount: data.get('amount') });
-  return 'Payment recorded. You’re one step closer to settled.';
+  return 'Payment recorded.';
 }));
 
 loadWorkspace();

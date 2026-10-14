@@ -81,9 +81,9 @@ input:focus,select:focus {
   height:44px;
   background:var(--green);
   color:white;
-  font-size:35px;
-  letter-spacing:-3px;
-  padding-right:5px
+  font-size:24px;
+  letter-spacing:0;
+  padding-right:0
 }
 .brand-icon span {
   color:#c8df9e;
@@ -107,23 +107,8 @@ input:focus,select:focus {
   border-radius:4px;
   letter-spacing:1px
 }
-.nav-item {
-  padding:14px 13px;
-  border-radius:8px;
-  margin:13px 0 34px;
-  display:flex;
-  gap:12px;
-  font-weight:600
-}
-.nav-item.active {
-  background:var(--pale);
-  color:var(--green)
-}
-.nav-item span {
-  font-size:19px;
-  line-height:17px
-}
 .side-heading {
+  margin-top:18px;
   margin-bottom:12px
 }
 .icon-button {
@@ -186,32 +171,8 @@ input:focus,select:focus {
   max-height:42vh;
   overflow:auto
 }
-.sidebar-bottom {
-  margin-top:auto;
-  display:flex;
-  gap:10px;
-  padding:20px 5px
-}
-.sidebar-bottom strong {
-  font-size:11px;
-  font-weight:500
-}
-.sidebar-bottom p {
-  font-size:11px;
-  color:var(--muted);
-  margin:5px 0 0
-}
-.mini-mark {
-  font-size:20px;
-  color:var(--green);
-  background:var(--pale);
-  border-radius:50%;
-  width:32px;
-  height:32px;
-  display:grid;
-  place-items:center
-}
 .api-link {
+  margin-top:auto;
   padding:18px 5px 0;
   border-top:1px solid var(--line);
   font-size:11px;
@@ -535,6 +496,12 @@ h2 .count {
 }
 .expense-amount {
   font-size:13px;
+  font-weight:600;
+  white-space:nowrap
+}
+.view-split {
+  color:var(--green);
+  font-size:10px;
   font-weight:600;
   white-space:nowrap
 }
