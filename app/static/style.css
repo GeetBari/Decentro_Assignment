@@ -1,12 +1,12 @@
 :root {
-  --green:#62556f;
-  --green-dark:#453a50;
-  --pale:#ead9d2;
-  --ink:#332b33;
-  --muted:#64748b;
-  --line:#d8c4bb;
-  --paper:#e9dad2;
-  --white:#f5e8e0;
+  --green:#17684e;
+  --green-dark:#104c3a;
+  --pale:#eaf2ed;
+  --ink:#25372f;
+  --muted:#7a827c;
+  --line:#e5e9e3;
+  --paper:#f7f8f4;
+  --white:#fff;
   --orange:#a86d3b
 }
 * {
@@ -78,7 +78,7 @@ input:focus,select:focus {
   border-radius:7px;
   width:44px;
   height:44px;
-  background:#62556f;
+  background:var(--green);
   color:white;
   font-size:24px;
   letter-spacing:0;
@@ -125,7 +125,7 @@ input:focus,select:focus {
   border-radius:8px
 }
 .group-choice.selected {
-  background:#fff1eb;
+  background:#f2f5f1;
   color:var(--ink);
   font-weight:600
 }
@@ -135,8 +135,8 @@ input:focus,select:focus {
 .group-choice .group-initial {
   flex-shrink:0;
   border-radius:7px;
-  background:#eef2f7;
-  color:#475569;
+  background:#f0ede4;
+  color:#77735d;
   width:29px;
   height:29px;
   display:grid;
@@ -144,8 +144,8 @@ input:focus,select:focus {
   font-size:12px
 }
 .group-choice.selected .group-initial {
-  background:#fde4da;
-  color:#a85545
+  background:#dcebe2;
+  color:var(--green)
 }
 .group-choice .group-name {
   overflow:hidden;
@@ -153,12 +153,12 @@ input:focus,select:focus {
   white-space:nowrap
 }
 .new-group {
-  border:1px dashed #94a3b8;
-  border-radius:5px;
+  border:1px dashed #ccd6cb;
+  border-radius:8px;
   padding:11px;
   margin:15px 4px;
   background:transparent;
-  color:#475569;
+  color:#647969;
   font-size:12px
 }
 #group-list {
@@ -263,14 +263,14 @@ h1 {
 .secondary {
   background:#fff;
   color:var(--ink);
-  border-color:#cbd5e1
+  border-color:#dce3db
 }
 .secondary:hover {
-  background:#f1f5f9
+  background:#f4f7f1
 }
 .subtle {
   background:transparent;
-  color:#475569;
+  color:#6f7b72;
   padding:7px 0
 }
 .stats {
@@ -297,8 +297,8 @@ h1 {
   width:29px;
   height:29px;
   border-radius:5px;
-  background:#fff1eb;
-  color:#a85545;
+  background:#f1f5ef;
+  color:#8e9c87;
   font-size:16px
 }
 .stat strong {
@@ -318,16 +318,16 @@ h1 {
 .how-it-works {
   display:flex;
   gap:13px;
-  background:#fff1eb;
-  border:1px solid #f7c8bb;
+  background:#edf2e8;
+  border:1px solid #e3eadc;
   border-radius:6px;
   margin:23px 0 28px;
   padding:16px 20px;
   align-items:center
 }
 .guide-icon {
-  border:1px solid #f7c8bb;
-  color:#a85545;
+  border:1px solid #9aac94;
+  color:#798f6d;
   border-radius:50%;
   width:18px;
   height:18px;
@@ -338,11 +338,11 @@ h1 {
 .how-it-works strong {
   font-size:12px;
   font-weight:600;
-  color:#7c3f35
+  color:#52664a
 }
 .how-it-works p {
   font-size:11px;
-  color:#475569;
+  color:#7d8b75;
   margin:4px 0 0;
   line-height:1.6
 }
@@ -433,7 +433,7 @@ h2 .count {
   max-width:140px
 }
 .expense {
-  border-top:1px solid #e2e8f0
+  border-top:1px solid #edf0e9
 }
 .expense summary {
   list-style:none;
@@ -447,7 +447,7 @@ h2 .count {
   display:none
 }
 .expense summary:hover {
-  background:#f8fafc
+  background:#fafbf8
 }
 .expense-icon {
   width:39px;
@@ -455,22 +455,22 @@ h2 .count {
   border-radius:6px;
   display:grid;
   place-items:center;
-  background:#fff1eb;
-  color:#b4533c;
+  background:#f3eee5;
+  color:#9b865f;
   font-size:17px;
   flex-shrink:0
 }
 .expense-icon.travel {
-  background:#fff1eb;
-  color:#b4533c
+  background:#eaf0f8;
+  color:#7b8daa
 }
 .expense-icon.stay {
-  background:#f1f5f9;
-  color:#475569
+  background:#eeeaf6;
+  color:#9080a4
 }
 .expense-icon.other {
-  background:#f1f5f9;
-  color:#475569
+  background:#eef2ea;
+  color:#8c9b7d
 }
 .expense-info {
   flex:1;
@@ -507,10 +507,10 @@ h2 .count {
   transform:rotate(180deg)
 }
 .expense-details {
-  background:#f8fafc;
+  background:#fafbf8;
   padding:15px 23px 17px 75px;
   font-size:11px;
-  color:#475569
+  color:#72806b
 }
 .expense-details strong {
   display:block;
@@ -850,24 +850,24 @@ form input::placeholder {
   z-index:10;
   max-width:90vw
 }
-/* Warm sand theme: avoid stark white and high-saturation red. */
-.sidebar { background:#e7d5cb }
-.topbar { background:#efdfd7 }
-.stat,.panel,.welcome,dialog { background:#f2e3da }
-.secondary,.filters select,.search-box,.record-button,form label input,form label select { background:#f7ece6 }
-.secondary:hover,.expense summary:hover,.expense-details,.member-table th { background:#ecdad1 }
-.suggestion { background:#ecd9d0; border-color:#ddc5bc }
-.how-it-works,.split-preview,.payment-description { background:#ead9d2 }
-.stat-symbol,.expense-icon,.expense-icon.travel,.group-choice.selected .group-initial { background:#e6d3ca; color:#62556f }
-.avatar { background:#e3d3e6; color:#62556f }
-.green-dot { background:#8e7aa1; box-shadow:0 0 0 5px #ead9d2 }
-.record-button { border-color:#cdb6c3 }
-.record-button:hover { background:#e4d4e7 }
-.receives { background:#e4d4e7; color:#62556f }
-.owes { background:#ead5c5; color:#795a47 }
-.settled { background:#e7ddd7; color:#6f6264 }
-.primary { background:#62556f }
-.primary:hover,#toast { background:#453a50 }
+/* Green and cream theme. */
+.sidebar { background:#fff }
+.topbar { background:#ffffff7a }
+.stat,.panel,.welcome,dialog { background:#fff }
+.secondary,.filters select,.search-box,.record-button,form label input,form label select { background:#fff }
+.secondary:hover,.expense summary:hover,.expense-details,.member-table th { background:#fafbf8 }
+.suggestion { background:#f7faf5; border-color:#e8eee2 }
+.how-it-works,.split-preview,.payment-description { background:#edf2e8 }
+.stat-symbol,.expense-icon,.expense-icon.travel,.group-choice.selected .group-initial { background:#eaf2ed; color:#17684e }
+.avatar { background:#e6eddc; color:#687e57 }
+.green-dot { background:#75a983; box-shadow:0 0 0 5px #f0f6ef }
+.record-button { border-color:#cddcc7 }
+.record-button:hover { background:#eaf2e4 }
+.receives { background:#eaf4ed; color:#367a50 }
+.owes { background:#fbf2e8; color:#a17b45 }
+.settled { background:#f1f3ed; color:#8b9781 }
+.primary { background:#17684e }
+.primary:hover,#toast { background:#104c3a }
 .loading {
   opacity:.5;
   pointer-events:none
