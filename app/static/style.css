@@ -1,12 +1,12 @@
 :root {
-  --green:#a85545;
-  --green-dark:#7c3f35;
-  --pale:#fff1eb;
-  --ink:#332a28;
+  --green:#62556f;
+  --green-dark:#453a50;
+  --pale:#ead9d2;
+  --ink:#332b33;
   --muted:#64748b;
-  --line:#eadbd5;
-  --paper:#fdf9f7;
-  --white:#fff;
+  --line:#d8c4bb;
+  --paper:#e9dad2;
+  --white:#f5e8e0;
   --orange:#a86d3b
 }
 * {
@@ -35,11 +35,11 @@ a {
   color:inherit
 }
 button:focus-visible,a:focus-visible,summary:focus-visible {
-  outline:3px solid #f7c8bb;
+  outline:3px solid #c9b4d0;
   outline-offset:4px
 }
 input:focus,select:focus {
-  outline:2px solid #f7c8bb;
+  outline:2px solid #c9b4d0;
   outline-offset:1px
 }
 [hidden] {
@@ -78,7 +78,7 @@ input:focus,select:focus {
   border-radius:7px;
   width:44px;
   height:44px;
-  background:#a85545;
+  background:#62556f;
   color:white;
   font-size:24px;
   letter-spacing:0;
@@ -850,6 +850,24 @@ form input::placeholder {
   z-index:10;
   max-width:90vw
 }
+/* Warm sand theme: avoid stark white and high-saturation red. */
+.sidebar { background:#e7d5cb }
+.topbar { background:#efdfd7 }
+.stat,.panel,.welcome,dialog { background:#f2e3da }
+.secondary,.filters select,.search-box,.record-button,form label input,form label select { background:#f7ece6 }
+.secondary:hover,.expense summary:hover,.expense-details,.member-table th { background:#ecdad1 }
+.suggestion { background:#ecd9d0; border-color:#ddc5bc }
+.how-it-works,.split-preview,.payment-description { background:#ead9d2 }
+.stat-symbol,.expense-icon,.expense-icon.travel,.group-choice.selected .group-initial { background:#e6d3ca; color:#62556f }
+.avatar { background:#e3d3e6; color:#62556f }
+.green-dot { background:#8e7aa1; box-shadow:0 0 0 5px #ead9d2 }
+.record-button { border-color:#cdb6c3 }
+.record-button:hover { background:#e4d4e7 }
+.receives { background:#e4d4e7; color:#62556f }
+.owes { background:#ead5c5; color:#795a47 }
+.settled { background:#e7ddd7; color:#6f6264 }
+.primary { background:#62556f }
+.primary:hover,#toast { background:#453a50 }
 .loading {
   opacity:.5;
   pointer-events:none
