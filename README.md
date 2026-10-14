@@ -152,6 +152,7 @@ Stopping the service keeps its database volume. `requirements.txt` contains runt
 - [Postman collection](docs/postman_collection.json)
 - [Demo and interview preparation](docs/DEMO.md)
 - [Verification notes](docs/VERIFICATION.md)
+- [Demo video guide and captions](docs/VIDEO_DEMO.md)
 
 ## Improvements with more time
 
