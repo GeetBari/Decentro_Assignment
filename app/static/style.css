@@ -1,11 +1,11 @@
 :root {
-  --green:#1d4ed8;
-  --green-dark:#1e3a8a;
-  --pale:#eff6ff;
-  --ink:#172033;
+  --green:#0f766e;
+  --green-dark:#115e59;
+  --pale:#f0fdfa;
+  --ink:#1f2937;
   --muted:#64748b;
-  --line:#dbe3ee;
-  --paper:#f8fafc;
+  --line:#d9e7e5;
+  --paper:#f7fbfb;
   --white:#fff;
   --orange:#a86d3b
 }
@@ -35,11 +35,11 @@ a {
   color:inherit
 }
 button:focus-visible,a:focus-visible,summary:focus-visible {
-  outline:3px solid #93c5fd;
+  outline:3px solid #99f6e4;
   outline-offset:4px
 }
 input:focus,select:focus {
-  outline:2px solid #93c5fd;
+  outline:2px solid #99f6e4;
   outline-offset:1px
 }
 [hidden] {
@@ -78,7 +78,7 @@ input:focus,select:focus {
   border-radius:7px;
   width:44px;
   height:44px;
-  background:#1e3a8a;
+  background:#0f766e;
   color:white;
   font-size:24px;
   letter-spacing:0;
@@ -125,7 +125,7 @@ input:focus,select:focus {
   border-radius:8px
 }
 .group-choice.selected {
-  background:#eff6ff;
+  background:#f0fdfa;
   color:var(--ink);
   font-weight:600
 }
@@ -144,8 +144,8 @@ input:focus,select:focus {
   font-size:12px
 }
 .group-choice.selected .group-initial {
-  background:#dbeafe;
-  color:#1d4ed8
+  background:#ccfbf1;
+  color:#0f766e
 }
 .group-choice .group-name {
   overflow:hidden;
@@ -297,8 +297,8 @@ h1 {
   width:29px;
   height:29px;
   border-radius:5px;
-  background:#eff6ff;
-  color:#1d4ed8;
+  background:#f0fdfa;
+  color:#0f766e;
   font-size:16px
 }
 .stat strong {
@@ -318,16 +318,16 @@ h1 {
 .how-it-works {
   display:flex;
   gap:13px;
-  background:#eff6ff;
-  border:1px solid #bfdbfe;
+  background:#f0fdfa;
+  border:1px solid #99f6e4;
   border-radius:6px;
   margin:23px 0 28px;
   padding:16px 20px;
   align-items:center
 }
 .guide-icon {
-  border:1px solid #93c5fd;
-  color:#1d4ed8;
+  border:1px solid #99f6e4;
+  color:#0f766e;
   border-radius:50%;
   width:18px;
   height:18px;
@@ -338,7 +338,7 @@ h1 {
 .how-it-works strong {
   font-size:12px;
   font-weight:600;
-  color:#1e3a8a
+  color:#115e59
 }
 .how-it-works p {
   font-size:11px;
@@ -455,14 +455,14 @@ h2 .count {
   border-radius:6px;
   display:grid;
   place-items:center;
-  background:#eff6ff;
-  color:#1d4ed8;
+  background:#eef2ff;
+  color:#5b5bd6;
   font-size:17px;
   flex-shrink:0
 }
 .expense-icon.travel {
-  background:#eff6ff;
-  color:#2563eb
+  background:#eef2ff;
+  color:#5b5bd6
 }
 .expense-icon.stay {
   background:#f1f5f9;
@@ -529,14 +529,14 @@ h2 .count {
   width:7px;
   height:7px;
   border-radius:50%;
-  background:#2563eb;
-  box-shadow:0 0 0 5px #eff6ff
+  background:#14b8a6;
+  box-shadow:0 0 0 5px #f0fdfa
 }
 .suggestion {
   margin:0 20px 15px;
   padding:16px;
   background:#f8fafc;
-  border:1px solid #dbeafe;
+  border:1px solid #b2f5ea;
   border-radius:6px
 }
 .suggestion-top {
@@ -550,8 +550,8 @@ h2 .count {
   width:31px;
   height:31px;
   border-radius:50%;
-  background:#dbeafe;
-  color:#1d4ed8;
+  background:#e0f2fe;
+  color:#0369a1;
   display:inline-grid;
   place-items:center;
   font-size:11px;
@@ -585,14 +585,14 @@ h2 .count {
 .record-button {
   font-size:10px;
   color:var(--green);
-  border:1px solid #93c5fd;
+  border:1px solid #99f6e4;
   background:white;
   border-radius:5px;
   padding:8px 10px;
   font-weight:600
 }
 .record-button:hover {
-  background:#eff6ff
+  background:#f0fdfa
 }
 .panel-footnote {
   border-top:1px solid var(--line);
@@ -663,8 +663,8 @@ h2 .count {
   white-space:nowrap
 }
 .receives {
-  background:#eff6ff;
-  color:#1d4ed8
+  background:#f0fdfa;
+  color:#0f766e
 }
 .owes {
   background:#fff7ed;
@@ -795,8 +795,8 @@ form input::placeholder {
   margin-top:16px;
   border-radius:5px;
   padding:13px;
-  background:#eff6ff;
-  color:#1e3a8a;
+  background:#f0fdfa;
+  color:#115e59;
   font-size:11px;
   line-height:1.7
 }
@@ -843,7 +843,7 @@ form input::placeholder {
   transform:translateX(-50%);
   padding:13px 22px;
   border-radius:6px;
-  background:#1e3a8a;
+  background:#115e59;
   color:#fff;
   box-shadow:0 6px 30px #122e2930;
   font-size:13px;
