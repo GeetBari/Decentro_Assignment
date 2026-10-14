@@ -108,7 +108,7 @@ function render() {
   $('#total-spent').textContent = money(total);
   $('#total-owed').textContent = money(outstanding);
   $('#member-count').textContent = state.members.length;
-  $('#member-caption').textContent = state.members.length ? 'People in this group' : 'Add people to this group';
+  $('#member-caption').textContent = state.members.length ? state.members.map(member => member.name).join(', ') : 'Add people to this group';
   $('#settle-caption').textContent = outstanding ? `${state.suggestions.length} suggested payment${state.suggestions.length === 1 ? '' : 's'} remaining` : 'No payments needed.';
   $('#expense-count').textContent = state.expenses.length;
   renderInsights();
