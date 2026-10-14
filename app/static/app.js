@@ -1,5 +1,5 @@
 const $ = (selector) => document.querySelector(selector);
-const state = { groups: [], users: [], members: [], expenses: [], payments: [], group: null, balance: null, suggestions: [], payment: null, version: 0 };
+const state = { groups: [], users: [], members: [], expenses: [], payments: [], summary: [], analytics: null, group: null, balance: null, suggestions: [], payment: null, version: 0 };
 const money = (minor) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(minor / 100);
 // API amounts have exactly two decimal places; keep arithmetic in paise here too.
 const paise = (value) => {
@@ -69,6 +69,7 @@ async function selectGroup(id) {
   $('#welcome').hidden = !!id;
   $('#group-content').hidden = !id;
   $('#add-expense').disabled = true;
+  $('#export-csv').disabled = !id;
   if (!id) {
     $('#group-title').textContent = 'Your shared expenses';
     $('#group-description').textContent = 'Create a group to start tracking shared expenses.';
@@ -79,12 +80,13 @@ async function selectGroup(id) {
   $('#group-content').classList.add('loading');
   history.replaceState(null, '', `/?group=${id}`);
   try {
-    const [members, expenses, balance, plan, payments] = await Promise.all([
+    const [members, expenses, balance, plan, payments, summary, analytics] = await Promise.all([
       api(`/groups/${id}/members`), allPages(`/groups/${id}/expenses`), api(`/balances?group_id=${id}`),
       api(`/groups/${id}/settlement-suggestions`), allPages(`/groups/${id}/settlements`),
+      api(`/groups/${id}/monthly-summary`), api(`/groups/${id}/analytics`),
     ]);
     if (version !== state.version) return;
-    Object.assign(state, { members, expenses, balance, suggestions: plan.suggestions, payments });
+    Object.assign(state, { members, expenses, balance, suggestions: plan.suggestions, payments, summary, analytics });
     $('#group-description').textContent = members.length ? 'Track expenses, balances, and repayments for this group.' : 'Add the people who will share expenses.';
     $('#add-expense').disabled = members.length === 0;
     $('#search').value = '';
@@ -108,6 +110,7 @@ function render() {
   $('#member-caption').textContent = state.members.length ? 'People in this group' : 'Add people to this group';
   $('#settle-caption').textContent = outstanding ? `${state.suggestions.length} suggested payment${state.suggestions.length === 1 ? '' : 's'} remaining` : 'No payments needed.';
   $('#expense-count').textContent = state.expenses.length;
+  renderInsights();
   renderExpenses();
   $('#suggestions').innerHTML = state.suggestions.map((payment, index) => `<article class="suggestion"><div class="suggestion-top">${avatar(payment.from_name)}<div class="suggestion-names">${escapeHTML(payment.from_name)}<span class="arrow" aria-label="pays">→</span>${escapeHTML(payment.to_name)}</div></div><div class="suggestion-bottom"><strong>${money(paise(payment.amount))}</strong><button class="record-button" data-payment="${index}">Record payment ↗</button></div></article>`).join('') || empty(state.members.length ? 'All settled up' : 'No balances yet', state.members.length ? 'Nobody owes anything right now.' : 'Add members and an expense to get started.', '✓');
   $('#members').innerHTML = state.members.length ? `<table class="member-table"><thead><tr><th>Member</th><th>Paid</th><th>Share</th><th>Balance</th></tr></thead><tbody>${state.balance.members.map(member => {
@@ -117,6 +120,19 @@ function render() {
   const names = Object.fromEntries(state.members.map(member => [member.id, member.name]));
   $('#payment-count').textContent = state.payments.length;
   $('#payment-list').innerHTML = state.payments.map(payment => `<div class="payment-row"><div>${escapeHTML(names[payment.from_user_id])} <span class="muted">paid</span> ${escapeHTML(names[payment.to_user_id])}<small>${dateLabel(payment.created_at)}</small></div><strong>${money(paise(payment.amount_minor ?? payment.amount))}</strong></div>`).join('') || '<div class="empty">No payments recorded yet.</div>';
+}
+
+function renderInsights() {
+  $('#monthly-summary').innerHTML = state.summary.map(item => {
+    const label = new Date(`${item.month}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+    return `<div class="insight-row"><div><strong>${label}</strong><small>${item.expense_count} expense${item.expense_count === 1 ? '' : 's'}</small></div><strong>${money(paise(item.total_spent))}</strong></div>`;
+  }).join('') || '<div class="empty">Add an expense to see monthly totals.</div>';
+  const total = paise(state.analytics.total_spent);
+  const section = (title, rows) => `<div class="analytics-section"><strong>${title}</strong>${rows.map(row => {
+    const amount = paise(row.total), percent = total ? Math.round((amount / total) * 100) : 0;
+    return `<div class="bar-row"><div><span>${escapeHTML(row.name)}</span><span>${money(amount)} · ${percent}%</span></div><i><b style="width:${percent}%"></b></i></div>`;
+  }).join('')}</div>`;
+  $('#analytics').innerHTML = state.analytics.expense_count ? section('By category', state.analytics.by_category) + section('Paid by', state.analytics.by_payer) : '<div class="empty">Add an expense to see spending details.</div>';
 }
 
 function renderExpenses() {
@@ -204,6 +220,9 @@ document.addEventListener('click', event => {
   }
 });
 $('#refresh').addEventListener('click', () => loadWorkspace());
+$('#export-csv').addEventListener('click', () => {
+  if (state.group) window.location.assign(`/groups/${state.group}/expenses/export.csv`);
+});
 $('#add-member').addEventListener('click', () => openDialog('member-dialog'));
 $('#add-expense').addEventListener('click', () => openDialog('expense-dialog'));
 $('#member-mode').addEventListener('change', setMemberMode);

@@ -1,19 +1,23 @@
+import csv
 from datetime import date, datetime, time, timedelta
+from io import StringIO
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Expense, Group, GroupMember, Settlement, User
 from app.schemas import (
+    AnalyticsOut,
     BalanceOut,
     ExpenseCreate,
     ExpenseOut,
     GroupCreate,
     GroupOut,
     MemberCreate,
+    MonthlySummaryOut,
     SettlementCreate,
     SettlementOut,
     SuggestionsOut,
@@ -28,6 +32,7 @@ from app.services.balances import (
 )
 from app.services.common import get_group, get_user, group_members
 from app.services.expenses import create_expense, expense_views
+from app.services.money import format_money
 
 router = APIRouter()
 DB = Annotated[Session, Depends(get_db, scope="function")]
@@ -150,6 +155,102 @@ def list_expenses(
         )
     )
     return expense_views(db, expenses)
+
+
+@router.get(
+    "/groups/{group_id}/monthly-summary",
+    response_model=list[MonthlySummaryOut],
+    tags=["3. Expenses"],
+    summary="See spending totals for each month",
+)
+def monthly_summary(group_id: int, db: DB):
+    """Monthly totals are calculated from the recorded expenses and do not store duplicate data."""
+    get_group(db, group_id)
+    totals: dict[str, list[int]] = {}
+    for expense in db.scalars(select(Expense).where(Expense.group_id == group_id)):
+        month = expense.created_at.strftime("%Y-%m")
+        row = totals.setdefault(month, [0, 0])
+        row[0] += expense.amount_minor
+        row[1] += 1
+    return [
+        {"month": month, "total_spent": format_money(total), "expense_count": count}
+        for month, (total, count) in sorted(totals.items(), reverse=True)
+    ]
+
+
+@router.get(
+    "/groups/{group_id}/analytics",
+    response_model=AnalyticsOut,
+    tags=["3. Expenses"],
+    summary="See spending by category and payer",
+)
+def analytics(group_id: int, db: DB):
+    group = get_group(db, group_id)
+    expenses = list(db.scalars(select(Expense).where(Expense.group_id == group_id)))
+    users = {user.id: user.name for user in group_members(db, group_id)}
+    categories: dict[str, list[int]] = {}
+    payers: dict[str, list[int]] = {}
+    for expense in expenses:
+        for buckets, name in (
+            (categories, expense.category or "Other"),
+            (payers, users[expense.paid_by]),
+        ):
+            row = buckets.setdefault(name, [0, 0])
+            row[0] += expense.amount_minor
+            row[1] += 1
+
+    def buckets(values: dict[str, list[int]]):
+        return [
+            {"name": name, "total": format_money(total), "expense_count": count}
+            for name, (total, count) in sorted(
+                values.items(), key=lambda item: (-item[1][0], item[0])
+            )
+        ]
+
+    return {
+        "group_id": group_id,
+        "currency": group.currency,
+        "total_spent": format_money(sum(expense.amount_minor for expense in expenses)),
+        "expense_count": len(expenses),
+        "by_category": buckets(categories),
+        "by_payer": buckets(payers),
+    }
+
+
+@router.get(
+    "/groups/{group_id}/expenses/export.csv",
+    tags=["3. Expenses"],
+    summary="Download the expense history as a CSV file",
+    response_class=Response,
+)
+def export_expenses_csv(group_id: int, db: DB):
+    get_group(db, group_id)
+    expenses = list(
+        db.scalars(
+            select(Expense)
+            .where(Expense.group_id == group_id)
+            .order_by(Expense.created_at.desc(), Expense.id.desc())
+        )
+    )
+    output = StringIO(newline="")
+    writer = csv.writer(output)
+    writer.writerow(["Date", "Description", "Category", "Paid by", "Amount (INR)", "Split type"])
+    for expense in expense_views(db, expenses):
+        writer.writerow(
+            [
+                expense["created_at"][:10],
+                expense["description"],
+                expense["category"] or "Other",
+                expense["payer_name"],
+                expense["amount"],
+                expense["split_type"],
+            ]
+        )
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="group-{group_id}-expenses.csv"'},
+    )
 
 
 @router.get(

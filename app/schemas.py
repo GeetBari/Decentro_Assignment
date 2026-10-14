@@ -175,3 +175,24 @@ class SettlementOut(BaseModel):
     to_user_id: int
     amount: str
     created_at: str
+
+
+class SpendingBucketOut(BaseModel):
+    name: str
+    total: str
+    expense_count: int
+
+
+class AnalyticsOut(BaseModel):
+    group_id: int
+    currency: str
+    total_spent: str
+    expense_count: int
+    by_category: list[SpendingBucketOut]
+    by_payer: list[SpendingBucketOut]
+
+
+class MonthlySummaryOut(BaseModel):
+    month: str
+    total_spent: str
+    expense_count: int

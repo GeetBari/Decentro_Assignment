@@ -48,7 +48,7 @@ The repository is private during development. Reviewers need access or the repos
 
 ## Run the demo
 
-For a visual walkthrough, open the dashboard at `/`. Create a group, add members, and choose **Add expense**. The form previews each person's share. **Who pays whom** shows suggested payments; **Record payment** logs money already paid back. Click an expense to see its saved shares. Search and category filters narrow the history. Everything uses the same backend and SQLite database as the API.
+For a visual walkthrough, open the dashboard at `/`. Create a group, add members, and choose **Add expense**. The form previews each person's share. **Who pays whom** shows suggested payments; **Record payment** logs money already paid back. Click an expense to see its saved shares. Search and category filters narrow the history. Monthly totals, category/payer analytics, and CSV export are available from the dashboard. Everything uses the same backend and SQLite database as the API.
 
 The dashboard is plain HTML, CSS, and JavaScript served by FastAPI from `app/static/`; no Node.js build is required. It works on desktop and mobile. Google Fonts enhances typography when available; system fonts work offline. The page refreshes after its own writes; use Refresh to see changes made elsewhere.
 
@@ -67,6 +67,7 @@ For manual requests, see [API examples](docs/API.md) or import [the Postman coll
 - Create/list users and groups; add/list group members.
 - Equal expense splitting across all members present when an expense is created.
 - Expense history with category, description search, UTC date filters, and pagination.
+- Monthly spending summaries, category/payer analytics, and downloadable CSV expense exports.
 - Pairwise balances and member totals for amounts paid, shares, payments, and net position.
 - **Product enhancement:** settlement suggestions that remove unnecessary intermediate payments.
 - Optional custom unequal splits and recorded partial/full settlements.

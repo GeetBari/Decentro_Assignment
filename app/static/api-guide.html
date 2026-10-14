@@ -18,7 +18,7 @@
       <article class="guide-card"><span class="step">STEP 1</span><h2>Create people</h2><p>Make a person for each friend, flatmate, or traveller who will share expenses.</p><span class="endpoint">POST /users</span></article>
       <article class="guide-card"><span class="step">STEP 2</span><h2>Create a group</h2><p>Make a group such as “Goa weekend”, then add those people to it.</p><span class="endpoint">POST /groups</span><br><span class="endpoint">POST /groups/{group_id}/members</span></article>
       <article class="guide-card"><span class="step">STEP 3</span><h2>Add a bill</h2><p>Say what the bill was, how much it cost, and who paid. Leave splits out to divide it equally.</p><span class="endpoint">POST /expenses</span></article>
-      <article class="guide-card"><span class="step">STEP 4</span><h2>Settle up</h2><p>See each person’s balance, get suggested repayments, then record money paid back.</p><span class="endpoint">GET /balances</span><br><span class="endpoint">POST /groups/{group_id}/settlements</span></article>
+      <article class="guide-card"><span class="step">STEP 4</span><h2>Review and settle</h2><p>See monthly totals, spending breakdowns, suggested repayments, then record money paid back.</p><span class="endpoint">GET /groups/{group_id}/analytics</span><br><span class="endpoint">GET /groups/{group_id}/settlement-suggestions</span><br><span class="endpoint">POST /groups/{group_id}/settlements</span></article>
     </section>
     <section class="panel" style="padding:28px;margin-bottom:22px"><div class="panel-heading"><div><h2>A complete example</h2><p>Create a ₹1,200 dinner bill paid by Mohit and shared equally among three group members.</p></div></div><pre class="example">POST /expenses
 
@@ -31,7 +31,7 @@
 }
 
 Result: each current member gets a ₹400.00 share.</pre></section>
-    <section class="callout"><strong>Two useful details:</strong> all amounts are sent and returned as decimal strings such as <code>"1200.00"</code>, and a settlement only records a payment that has already happened. It never moves money itself.</section>
+    <section class="callout"><strong>Useful extras:</strong> <code>GET /groups/{group_id}/monthly-summary</code> returns one total per month, and <code>GET /groups/{group_id}/expenses/export.csv</code> downloads the expense history as a spreadsheet-ready CSV. All amounts are returned as decimal strings such as <code>"1200.00"</code>. A settlement only records a payment that has already happened; it never moves money itself.</section>
   </main>
 </body>
 </html>

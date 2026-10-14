@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#12634c">
   <title>Expense Tracker</title>
-  <link rel="stylesheet" href="/static/style.css?v=green-cream">
-  <script src="/static/app.js" defer></script>
+  <link rel="stylesheet" href="/static/style.css?v=green-cream-insights">
+  <script src="/static/app.js?v=insights" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -18,7 +18,7 @@
     <a class="api-link" href="/api-guide" target="_blank" rel="noopener">API guide <span aria-hidden="true">↗</span></a>
   </aside>
   <main>
-    <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
+    <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="export-csv" class="button subtle" disabled>↓ Export CSV</button><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
     <div class="page">
       <div id="page-error" class="error-banner" role="alert" hidden></div>
       <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><button class="button primary" id="add-expense" disabled>+ Add expense</button></section>
@@ -30,6 +30,10 @@
           <article class="stat"><div><span>Members</span><span class="stat-symbol">#</span></div><strong id="member-count">0</strong><small id="member-caption">Add people to this group</small></article>
         </section>
           <section class="how-it-works"><div class="guide-icon">i</div><div><strong>How balances work</strong><p>Add an expense and choose who paid. The app calculates each person’s share. Record a payment after someone pays you back.</p></div></section>
+        <section class="insights-grid" aria-label="Spending insights">
+          <article class="panel insight-panel"><div class="panel-heading"><div><h2>Monthly summary</h2><p>Your spending by month.</p></div></div><div id="monthly-summary"></div></article>
+          <article class="panel insight-panel"><div class="panel-heading"><div><h2>Spending analytics</h2><p>Where the group’s money went.</p></div></div><div id="analytics"></div></article>
+        </section>
         <div class="content-grid">
           <section class="panel expense-panel"><div class="panel-heading"><div><h2>Expenses <span id="expense-count" class="count">0</span></h2><p>Click an expense to view the split.</p></div><span class="tiny-label">LATEST FIRST</span></div>
             <div class="filters"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search expenses…" aria-label="Search expenses"></label><select id="category-filter" aria-label="Filter by category"><option value="">All categories</option></select></div>

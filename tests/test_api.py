@@ -169,6 +169,27 @@ def test_history_filters_pagination_and_literal_search(client, trip):
     assert client.get(f"/groups/{group}/expenses?date_from=invalid").status_code == 422
 
 
+def test_monthly_summary_analytics_and_csv_export(client, trip):
+    group, _ = trip
+    add_expense(client, trip, "1200", description="Dinner", category="food")
+    add_expense(client, trip, "300", description="Taxi", category="transport", payer=1)
+    monthly = client.get(f"/groups/{group}/monthly-summary")
+    assert monthly.status_code == 200
+    assert monthly.json()[0]["total_spent"] == "1500.00"
+    assert monthly.json()[0]["expense_count"] == 2
+    analytics = client.get(f"/groups/{group}/analytics").json()
+    assert analytics["total_spent"] == "1500.00"
+    assert [(item["name"], item["total"]) for item in analytics["by_category"]] == [
+        ("food", "1200.00"),
+        ("transport", "300.00"),
+    ]
+    export = client.get(f"/groups/{group}/expenses/export.csv")
+    assert export.status_code == 200
+    assert export.headers["content-type"].startswith("text/csv")
+    assert "Date,Description,Category,Paid by,Amount (INR),Split type" in export.text
+    assert "Dinner,food,Mohit,1200.00,equal" in export.text
+
+
 def test_partial_and_full_settlement(client, trip):
     group, (mohit, rahul, ankit) = trip
     add_expense(client, trip)
@@ -286,6 +307,8 @@ def test_docs_and_health(client):
     schema = client.get("/openapi.json").json()
     assert "/expenses" in schema["paths"]
     assert "/balances" in schema["paths"]
+    assert "/groups/{group_id}/analytics" in schema["paths"]
+    assert "/groups/{group_id}/expenses/export.csv" in schema["paths"]
     assert schema["paths"]["/expenses"]["post"]["summary"] == "Add a shared bill"
 
 
