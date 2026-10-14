@@ -1,0 +1,572 @@
+{
+  "info": {
+    "name": "Decentro Expense Sharing Service",
+    "description": "Run in order against the local API. Each run creates fresh users and a group. IDs are captured automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "mohit_id",
+      "value": ""
+    },
+    {
+      "key": "rahul_id",
+      "value": ""
+    },
+    {
+      "key": "ankit_id",
+      "value": ""
+    },
+    {
+      "key": "group_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Mohit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Mohit\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"mohit_id\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Rahul",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Rahul\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"rahul_id\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Ankit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ankit\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"ankit_id\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/users"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Goa Trip",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/groups",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Goa Trip Postman\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.collectionVariables.set(\"group_id\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List groups",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add member mohit_id",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/groups/{{group_id}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": {{mohit_id}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add member rahul_id",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/groups/{{group_id}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": {{rahul_id}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add member ankit_id",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/groups/{{group_id}}/members",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": {{ankit_id}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List members",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups/{{group_id}}/members"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create equal dinner expense",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/expenses",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{mohit_id}},\n  \"amount\": \"1200.00\",\n  \"description\": \"Dinner\",\n  \"category\": \"food\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Three equal shares\", function () { pm.expect(pm.response.json().splits.map(s => s.amount)).to.eql([\"400.00\", \"400.00\", \"400.00\"]); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expense history",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups/{{group_id}}/expenses?category=food&limit=10"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Check dinner balances",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/balances?group_id={{group_id}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Two INR 400 debts\", function () { pm.expect(pm.response.json().balances.map(b => b.amount)).to.eql([\"400.00\", \"400.00\"]); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settlement suggestions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups/{{group_id}}/settlement-suggestions"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record Rahul payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/groups/{{group_id}}/settlements",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from_user_id\": {{rahul_id}},\n  \"to_user_id\": {{mohit_id}},\n  \"amount\": \"400.00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Check remaining suggestion",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups/{{group_id}}/settlement-suggestions"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Only Ankit remains\", function () { const body=pm.response.json(); pm.expect(body.payment_count).to.eql(1); pm.expect(body.suggestions[0].from_user_id).to.eql(Number(pm.collectionVariables.get(\"ankit_id\"))); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment history",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/groups/{{group_id}}/settlements"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create unequal hotel expense",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/expenses",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{mohit_id}},\n  \"amount\": \"1000.00\",\n  \"description\": \"Hotel\",\n  \"splits\": [\n    {\n      \"user_id\": {{mohit_id}},\n      \"amount\": \"500.00\"\n    },\n    {\n      \"user_id\": {{rahul_id}},\n      \"amount\": \"300.00\"\n    },\n    {\n      \"user_id\": {{ankit_id}},\n      \"amount\": \"200.00\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reject negative amount",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/expenses",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{mohit_id}},\n  \"amount\": \"-1\",\n  \"description\": \"Invalid\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(422); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected HTTP status\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
