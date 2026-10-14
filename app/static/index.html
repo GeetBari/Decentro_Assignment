@@ -14,7 +14,7 @@
     <div class="side-label">GROUPS <span class="local-label">LOCAL</span></div>
     <div class="side-heading"><span>YOUR GROUPS</span><button class="icon-button" data-open="group-dialog" aria-label="Create a group">+</button></div>
     <nav id="group-list" aria-label="Your groups"><p class="muted">Loading your groups…</p></nav>
-    <button class="new-group" data-open="group-dialog">+ Create a group</button>
+    <button class="new-group" data-open="group-dialog">+ Create a group</button><button id="load-demo" class="new-group">Load demo data</button>
     <a class="api-link" href="/api-guide" target="_blank" rel="noopener">API guide <span aria-hidden="true">↗</span></a>
   </aside>
   <main>
@@ -34,7 +34,7 @@
         <section class="panel analytics-panel" aria-label="Spending analytics"><div class="panel-heading"><div><h2>Spending analytics</h2><p>Where the group’s money went.</p></div></div><div id="analytics"></div></section>
         <div class="content-grid">
           <section class="panel expense-panel"><div class="panel-heading"><div><h2>Expenses <span id="expense-count" class="count">0</span></h2><p>Click an expense to view the split.</p></div><span class="tiny-label">LATEST FIRST</span></div>
-            <div class="filters"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search expenses…" aria-label="Search expenses"></label><select id="category-filter" aria-label="Filter by category"><option value="">All categories</option></select></div>
+            <div class="filters"><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search expenses…" aria-label="Search expenses"></label><select id="category-filter" aria-label="Filter by category"><option value="">All categories</option></select><select id="date-range" aria-label="Filter by date"><option value="all">All time</option><option value="month">This month</option><option value="30">Last 30 days</option></select></div>
             <div id="expense-list"></div>
           </section>
           <section class="panel settlement-panel"><div class="panel-heading"><div><h2>Who pays whom</h2><p>Suggested payments based on current balances.</p></div><span class="green-dot" aria-hidden="true"></span></div><div id="suggestions"></div><div class="panel-footnote">Record a payment only after it has been made. This app does not move money.</div></section>

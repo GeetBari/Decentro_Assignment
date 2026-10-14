@@ -76,6 +76,12 @@ class ExpenseCreate(InputModel):
         return self
 
 
+class ReceiptCreate(InputModel):
+    filename: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=160)]
+    content_type: Literal["image/jpeg", "image/png", "application/pdf"]
+    data_base64: Annotated[str, StringConstraints(min_length=4, max_length=7_000_000)]
+
+
 class SettlementCreate(InputModel):
     from_user_id: PositiveId
     to_user_id: PositiveId
@@ -132,6 +138,7 @@ class ExpenseOut(BaseModel):
     split_type: str
     created_at: str
     splits: list[SplitOut]
+    receipt_url: str | None
 
 
 class TransferOut(BaseModel):

@@ -175,7 +175,12 @@ function selectAnalyticsSlice(index) {
 function renderExpenses() {
   const search = $('#search').value.trim().toLowerCase();
   const category = $('#category-filter').value;
-  const visible = state.expenses.filter(expense => expense.description.toLowerCase().includes(search) && (!category || (expense.category || 'Other') === category));
+  const range = $('#date-range')?.value || 'all';
+  const start = new Date();
+  if (range === 'month') start.setDate(1);
+  if (range === '30') start.setDate(start.getDate() - 29);
+  start.setHours(0, 0, 0, 0);
+  const visible = state.expenses.filter(expense => expense.description.toLowerCase().includes(search) && (!category || (expense.category || 'Other') === category) && (range === 'all' || new Date(expense.created_at) >= start));
   $('#expense-list').innerHTML = visible.map(expense => {
     const type = (expense.category || 'other').toLowerCase();
     const symbol = ({ food: '♧', travel: '↗', transport: '↗', stay: '⌂', shopping: '◇' })[type] || '▦';
@@ -277,6 +282,10 @@ $('#expense-amount').addEventListener('input', previewSplit);
 $('#split-mode').addEventListener('change', previewSplit);
 $('#search').addEventListener('input', renderExpenses);
 $('#category-filter').addEventListener('change', renderExpenses);
+$('#date-range').addEventListener('change', renderExpenses);
+$('#load-demo').addEventListener('click', async () => {
+  try { const group = await api('/demo-data', {}); notify('Demo group created.'); await loadWorkspace(group.id); } catch (error) { showError(error); }
+});
 
 $('#group-form').addEventListener('submit', event => submit(event, async data => {
   const name = data.get('name').trim();

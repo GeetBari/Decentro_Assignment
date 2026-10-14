@@ -1,3 +1,5 @@
+import base64
+import binascii
 import csv
 from datetime import date, datetime, time, timedelta, timezone
 from io import BytesIO, StringIO
@@ -10,7 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Expense, Group, GroupMember, Settlement, User
+from app.models import Expense, ExpenseReceipt, Group, GroupMember, Settlement, User
 from app.schemas import (
     AnalyticsOut,
     BalanceOut,
@@ -20,6 +22,7 @@ from app.schemas import (
     GroupOut,
     MemberCreate,
     MonthlySummaryOut,
+    ReceiptCreate,
     SettlementCreate,
     SettlementOut,
     SuggestionsOut,
@@ -121,6 +124,88 @@ def list_members(group_id: int, db: DB):
 )
 def add_expense(data: ExpenseCreate, db: DB):
     return expense_views(db, [create_expense(db, data)])[0]
+
+
+@router.put(
+    "/expenses/{expense_id}/receipt",
+    status_code=204,
+    tags=["3. Expenses"],
+    summary="Attach a receipt image or PDF to an expense",
+)
+def add_receipt(expense_id: int, data: ReceiptCreate, db: DB):
+    if not (expense := db.get(Expense, expense_id)):
+        raise HTTPException(404, "Expense not found")
+    try:
+        receipt_data = base64.b64decode(data.data_base64, validate=True)
+    except (ValueError, binascii.Error) as exc:
+        raise HTTPException(422, "Receipt data must be valid base64") from exc
+    if not receipt_data or len(receipt_data) > 5_000_000:
+        raise HTTPException(422, "Receipt must be between 1 byte and 5 MB")
+    receipt = db.get(ExpenseReceipt, expense_id)
+    if receipt:
+        receipt.filename, receipt.content_type, receipt.data = (
+            data.filename,
+            data.content_type,
+            receipt_data,
+        )
+    else:
+        db.add(
+            ExpenseReceipt(
+                expense_id=expense.id,
+                filename=data.filename,
+                content_type=data.content_type,
+                data=receipt_data,
+            )
+        )
+
+
+@router.get(
+    "/expenses/{expense_id}/receipt",
+    tags=["3. Expenses"],
+    summary="Open an expense receipt",
+    response_class=Response,
+)
+def get_receipt(expense_id: int, db: DB):
+    receipt = db.get(ExpenseReceipt, expense_id)
+    if not receipt:
+        raise HTTPException(404, "Receipt not found")
+    return Response(
+        content=receipt.data,
+        media_type=receipt.content_type,
+        headers={"Content-Disposition": f'inline; filename="{receipt.filename}"'},
+    )
+
+
+@router.post(
+    "/demo-data",
+    response_model=GroupOut,
+    status_code=201,
+    tags=["Start here"],
+    summary="Create a ready-to-explore demo group",
+)
+def create_demo_data(db: DB):
+    users = []
+    for name in ("Mohit", "Rahul", "Ankit"):
+        user = User(name=name)
+        db.add(user)
+        db.flush()
+        users.append(user)
+    group = Group(name=f"Goa Trip Demo {users[0].id}")
+    db.add(group)
+    db.flush()
+    db.add_all(GroupMember(group_id=group.id, user_id=user.id) for user in users)
+    db.flush()
+    create_expense(
+        db,
+        ExpenseCreate(
+            group_id=group.id,
+            paid_by=users[0].id,
+            amount="1200.00",
+            description="Dinner",
+            category="Food",
+        ),
+    )
+    return group
 
 
 @router.get(

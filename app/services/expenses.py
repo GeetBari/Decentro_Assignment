@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Expense, ExpenseSplit, User
+from app.models import Expense, ExpenseReceipt, ExpenseSplit, User
 from app.schemas import ExpenseCreate
 from app.services.common import get_group, group_members
 from app.services.money import equal_split, format_money, to_minor
@@ -67,6 +67,14 @@ def expense_views(db: Session, expenses: list[Expense]) -> list[dict]:
             select(User).where(User.id.in_({expense.paid_by for expense in expenses}))
         )
     }
+    receipts = {
+        receipt.expense_id: f"/expenses/{receipt.expense_id}/receipt"
+        for receipt in db.scalars(
+            select(ExpenseReceipt).where(
+                ExpenseReceipt.expense_id.in_([expense.id for expense in expenses])
+            )
+        )
+    }
     return [
         {
             "id": expense.id,
@@ -79,6 +87,7 @@ def expense_views(db: Session, expenses: list[Expense]) -> list[dict]:
             "split_type": expense.split_type,
             "created_at": expense.created_at.isoformat() + "Z",
             "splits": splits[expense.id],
+            "receipt_url": receipts.get(expense.id),
         }
         for expense in expenses
     ]

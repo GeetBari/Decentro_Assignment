@@ -62,6 +62,15 @@ class ExpenseSplit(Base):
     __table_args__ = (CheckConstraint("amount_minor >= 0"),)
 
 
+class ExpenseReceipt(Base):
+    __tablename__ = "expense_receipts"
+    expense_id: Mapped[int] = mapped_column(ForeignKey("expenses.id"), primary_key=True)
+    filename: Mapped[str] = mapped_column(String(160))
+    content_type: Mapped[str] = mapped_column(String(100))
+    data: Mapped[bytes]
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now)
+
+
 class Settlement(Base):
     __tablename__ = "settlements"
     id: Mapped[int] = mapped_column(primary_key=True)
