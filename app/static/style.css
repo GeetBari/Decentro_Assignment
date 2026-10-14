@@ -874,6 +874,23 @@ form input::placeholder {
 .insight-row small { display:block; color:var(--muted); margin-top:3px; font-size:12px }
 .analytics-section { padding:0 24px 18px }
 .analytics-section > strong { display:block; font-size:12px; margin:8px 0 11px; color:var(--muted) }
+.chart-section { padding:0 24px 18px }
+.chart-section > strong { display:block; font-size:12px; margin:8px 0 11px; color:var(--muted) }
+.category-chart { position:relative; display:grid; place-items:center; min-height:180px }
+.category-chart svg { width:180px; height:180px; overflow:visible }
+.analytics-slice { cursor:pointer; stroke:#fff; stroke-width:2; transition:opacity .16s ease,transform .16s ease; transform-origin:center; outline:none }
+.analytics-slice:not(.active) { opacity:.45 }
+.analytics-slice.active { opacity:1; transform:scale(1.04) }
+.analytics-slice:focus-visible { stroke:#25372f; stroke-width:4 }
+.chart-detail { position:absolute; display:grid; place-items:center; text-align:center; pointer-events:none; max-width:105px }
+.chart-detail strong { font-size:13px; overflow-wrap:anywhere }
+.chart-detail span { color:var(--muted); font-size:11px; margin-top:4px }
+.chart-legend-list { display:grid; gap:5px }
+.chart-legend { display:grid; grid-template-columns:12px minmax(0,1fr) auto auto; align-items:center; gap:8px; width:100%; padding:7px 8px; border:0; border-radius:6px; background:transparent; color:var(--ink); text-align:left; font-size:12px }
+.chart-legend:hover,.chart-legend.active { background:#edf2e8 }
+.chart-legend i { width:9px; height:9px; border-radius:50% }
+.chart-legend strong { font-size:12px }
+.chart-legend small { color:var(--muted); min-width:30px; text-align:right }
 .bar-row { margin:11px 0 }
 .bar-row > div { display:flex; justify-content:space-between; gap:10px; font-size:12px }
 .bar-row > div span:last-child { color:var(--muted); white-space:nowrap }

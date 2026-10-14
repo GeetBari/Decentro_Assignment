@@ -132,7 +132,44 @@ function renderInsights() {
     const amount = paise(row.total), percent = total ? Math.round((amount / total) * 100) : 0;
     return `<div class="bar-row"><div><span>${escapeHTML(row.name)}</span><span>${money(amount)} · ${percent}%</span></div><i><b style="width:${percent}%"></b></i></div>`;
   }).join('')}</div>`;
-  $('#analytics').innerHTML = state.analytics.expense_count ? section('By category', state.analytics.by_category) + section('Paid by', state.analytics.by_payer) : '<div class="empty">Add an expense to see spending details.</div>';
+  $('#analytics').innerHTML = state.analytics.expense_count ? categoryChart(state.analytics.by_category, total) + section('Paid by', state.analytics.by_payer) : '<div class="empty">Add an expense to see spending details.</div>';
+}
+
+function categoryChart(rows, total) {
+  const colors = ['#17684e', '#75a983', '#b8c98f', '#d7b878', '#c58b66', '#8ca8a0'];
+  let angle = -90;
+  const point = (degrees, radius) => {
+    const radians = degrees * Math.PI / 180;
+    return [100 + radius * Math.cos(radians), 100 + radius * Math.sin(radians)];
+  };
+  const slice = (start, end, color, index) => {
+    if (end - start >= 359.99) return `<circle class="analytics-slice active" data-analytics-slice="${index}" cx="100" cy="100" r="56" fill="none" style="stroke:${color};stroke-width:34px" tabindex="0" role="button" aria-label="${escapeHTML(rows[index].name)}"></circle>`;
+    const [outerStartX, outerStartY] = point(start, 73), [outerEndX, outerEndY] = point(end, 73);
+    const [innerEndX, innerEndY] = point(end, 39), [innerStartX, innerStartY] = point(start, 39);
+    const large = end - start > 180 ? 1 : 0;
+    return `<path class="analytics-slice" data-analytics-slice="${index}" d="M ${outerStartX} ${outerStartY} A 73 73 0 ${large} 1 ${outerEndX} ${outerEndY} L ${innerEndX} ${innerEndY} A 39 39 0 ${large} 0 ${innerStartX} ${innerStartY} Z" fill="${color}" tabindex="0" role="button" aria-label="${escapeHTML(rows[index].name)}"></path>`;
+  };
+  const slices = rows.map((row, index) => {
+    const next = angle + (paise(row.total) / total) * 360;
+    const markup = slice(angle, next, colors[index % colors.length], index);
+    angle = next;
+    return markup;
+  }).join('');
+  const legend = rows.map((row, index) => {
+    const percent = Math.round((paise(row.total) / total) * 100);
+    return `<button class="chart-legend ${index === 0 ? 'active' : ''}" data-analytics-slice="${index}"><i style="background:${colors[index % colors.length]}"></i><span>${escapeHTML(row.name)}</span><strong>${money(paise(row.total))}</strong><small>${percent}%</small></button>`;
+  }).join('');
+  const first = rows[0];
+  return `<div class="chart-section"><strong>By category</strong><div class="category-chart"><svg viewBox="0 0 200 200" role="group" aria-label="Spending by category">${slices}</svg><div id="chart-detail" class="chart-detail"><strong>${escapeHTML(first.name)}</strong><span>${money(paise(first.total))} · ${Math.round((paise(first.total) / total) * 100)}%</span></div></div><div class="chart-legend-list">${legend}</div></div>`;
+}
+
+function selectAnalyticsSlice(index) {
+  const rows = state.analytics?.by_category || [];
+  const row = rows[index];
+  if (!row) return;
+  const total = paise(state.analytics.total_spent);
+  document.querySelectorAll('[data-analytics-slice]').forEach(element => element.classList.toggle('active', Number(element.dataset.analyticsSlice) === index));
+  $('#chart-detail').innerHTML = `<strong>${escapeHTML(row.name)}</strong><span>${money(paise(row.total))} · ${Math.round((paise(row.total) / total) * 100)}%</span>`;
 }
 
 function renderExpenses() {
@@ -218,6 +255,16 @@ document.addEventListener('click', event => {
     $('#payment-amount').value = state.payment.amount;
     $('#payment-amount').max = state.payment.amount;
   }
+  const analyticsSlice = event.target.closest('[data-analytics-slice]');
+  if (analyticsSlice) selectAnalyticsSlice(Number(analyticsSlice.dataset.analyticsSlice));
+});
+document.addEventListener('pointerover', event => {
+  const analyticsSlice = event.target.closest('[data-analytics-slice]');
+  if (analyticsSlice) selectAnalyticsSlice(Number(analyticsSlice.dataset.analyticsSlice));
+});
+document.addEventListener('focusin', event => {
+  const analyticsSlice = event.target.closest('[data-analytics-slice]');
+  if (analyticsSlice) selectAnalyticsSlice(Number(analyticsSlice.dataset.analyticsSlice));
 });
 $('#refresh').addEventListener('click', () => loadWorkspace());
 $('#export-csv').addEventListener('click', () => {
