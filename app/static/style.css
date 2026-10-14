@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap');
 :root {
-  --green:#17684e;
-  --green-dark:#104c3a;
-  --pale:#eaf2ed;
-  --ink:#25372f;
-  --muted:#7a827c;
-  --line:#e5e9e3;
-  --paper:#f7f8f4;
+  --green:#1d4ed8;
+  --green-dark:#1e3a8a;
+  --pale:#eff6ff;
+  --ink:#172033;
+  --muted:#64748b;
+  --line:#dbe3ee;
+  --paper:#f8fafc;
   --white:#fff;
   --orange:#a86d3b
 }
@@ -17,7 +16,7 @@ body {
   margin:0;
   background:var(--paper);
   color:var(--ink);
-  font:14px 'DM Sans',system-ui,sans-serif
+  font:14px "Segoe UI",Arial,sans-serif
 }
 button,input,select {
   font:inherit
@@ -36,11 +35,11 @@ a {
   color:inherit
 }
 button:focus-visible,a:focus-visible,summary:focus-visible {
-  outline:3px solid #83b79f;
+  outline:3px solid #93c5fd;
   outline-offset:4px
 }
 input:focus,select:focus {
-  outline:2px solid #83b79f;
+  outline:2px solid #93c5fd;
   outline-offset:1px
 }
 [hidden] {
@@ -61,13 +60,13 @@ input:focus,select:focus {
   align-items:center;
   gap:12px;
   text-decoration:none;
-  font:800 27px Manrope,sans-serif;
-  letter-spacing:-1.4px;
+  font:700 22px "Segoe UI",Arial,sans-serif;
+  letter-spacing:-.6px;
   margin-bottom:54px
 }
 .brand small {
   display:block;
-  font:11px 'DM Sans',sans-serif;
+  font:11px "Segoe UI",Arial,sans-serif;
   letter-spacing:0;
   color:var(--muted);
   margin-top:4px
@@ -76,19 +75,14 @@ input:focus,select:focus {
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:13px;
+  border-radius:7px;
   width:44px;
   height:44px;
-  background:var(--green);
+  background:#1e3a8a;
   color:white;
   font-size:24px;
   letter-spacing:0;
   padding-right:0
-}
-.brand-icon span {
-  color:#c8df9e;
-  font-size:23px;
-  margin-top:13px
 }
 .side-label,.side-heading {
   font-size:10px;
@@ -131,7 +125,7 @@ input:focus,select:focus {
   border-radius:8px
 }
 .group-choice.selected {
-  background:#f2f5f1;
+  background:#eff6ff;
   color:var(--ink);
   font-weight:600
 }
@@ -141,8 +135,8 @@ input:focus,select:focus {
 .group-choice .group-initial {
   flex-shrink:0;
   border-radius:7px;
-  background:#f0ede4;
-  color:#77735d;
+  background:#eef2f7;
+  color:#475569;
   width:29px;
   height:29px;
   display:grid;
@@ -150,8 +144,8 @@ input:focus,select:focus {
   font-size:12px
 }
 .group-choice.selected .group-initial {
-  background:#dcebe2;
-  color:var(--green)
+  background:#dbeafe;
+  color:#1d4ed8
 }
 .group-choice .group-name {
   overflow:hidden;
@@ -159,12 +153,12 @@ input:focus,select:focus {
   white-space:nowrap
 }
 .new-group {
-  border:1px dashed #ccd6cb;
-  border-radius:8px;
+  border:1px dashed #94a3b8;
+  border-radius:5px;
   padding:11px;
   margin:15px 4px;
   background:transparent;
-  color:#647969;
+  color:#475569;
   font-size:12px
 }
 #group-list {
@@ -191,7 +185,7 @@ main {
   justify-content:space-between;
   align-items:center;
   padding:0 42px;
-  background:#ffffff7a;
+  background:#fff;
   font-size:12px
 }
 .crumb {
@@ -230,7 +224,7 @@ main {
   margin-bottom:11px
 }
 h1,h2,h3 {
-  font-family:Manrope,system-ui,sans-serif
+  font-family:"Segoe UI",Arial,sans-serif
 }
 h1 {
   font-size:32px;
@@ -269,14 +263,14 @@ h1 {
 .secondary {
   background:#fff;
   color:var(--ink);
-  border-color:#dce3db
+  border-color:#cbd5e1
 }
 .secondary:hover {
-  background:#f4f7f1
+  background:#f1f5f9
 }
 .subtle {
   background:transparent;
-  color:#6f7b72;
+  color:#475569;
   padding:7px 0
 }
 .stats {
@@ -287,7 +281,7 @@ h1 {
 .stat {
   background:white;
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:6px;
   padding:21px 23px
 }
 .stat>div {
@@ -302,14 +296,14 @@ h1 {
   place-items:center;
   width:29px;
   height:29px;
-  border-radius:8px;
-  background:#f1f5ef;
-  color:#8e9c87;
+  border-radius:5px;
+  background:#eff6ff;
+  color:#1d4ed8;
   font-size:16px
 }
 .stat strong {
   display:block;
-  font:700 31px Manrope,sans-serif;
+  font:700 31px "Segoe UI",Arial,sans-serif;
   letter-spacing:-1px;
   margin:8px 0 9px;
   overflow-wrap:anywhere
@@ -324,16 +318,16 @@ h1 {
 .how-it-works {
   display:flex;
   gap:13px;
-  background:#edf2e8;
-  border:1px solid #e3eadc;
-  border-radius:9px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:6px;
   margin:23px 0 28px;
   padding:16px 20px;
   align-items:center
 }
 .guide-icon {
-  border:1px solid #9aac94;
-  color:#798f6d;
+  border:1px solid #93c5fd;
+  color:#1d4ed8;
   border-radius:50%;
   width:18px;
   height:18px;
@@ -344,11 +338,11 @@ h1 {
 .how-it-works strong {
   font-size:12px;
   font-weight:600;
-  color:#52664a
+  color:#1e3a8a
 }
 .how-it-works p {
   font-size:11px;
-  color:#7d8b75;
+  color:#475569;
   margin:4px 0 0;
   line-height:1.6
 }
@@ -361,7 +355,7 @@ h1 {
 .panel {
   background:white;
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:6px;
   overflow:hidden
 }
 .panel-heading {
@@ -381,7 +375,7 @@ h2 .count {
   margin-left:7px
 }
 .count {
-  font:10px 'DM Sans',sans-serif;
+  font:10px "Segoe UI",Arial,sans-serif;
   border:1px solid var(--line);
   background:#f8f9f6;
   padding:2px 6px;
@@ -408,9 +402,9 @@ h2 .count {
 .search-box {
   display:flex;
   align-items:center;
-  background:#fafbf8;
+  background:#fff;
   border:1px solid var(--line);
-  border-radius:6px;
+  border-radius:5px;
   padding:0 11px;
   flex:1;
   min-width:0;
@@ -439,7 +433,7 @@ h2 .count {
   max-width:140px
 }
 .expense {
-  border-top:1px solid #edf0e9
+  border-top:1px solid #e2e8f0
 }
 .expense summary {
   list-style:none;
@@ -453,30 +447,30 @@ h2 .count {
   display:none
 }
 .expense summary:hover {
-  background:#fafbf8
+  background:#f8fafc
 }
 .expense-icon {
   width:39px;
   height:39px;
-  border-radius:10px;
+  border-radius:6px;
   display:grid;
   place-items:center;
-  background:#f3eee5;
-  color:#9b865f;
+  background:#eff6ff;
+  color:#1d4ed8;
   font-size:17px;
   flex-shrink:0
 }
 .expense-icon.travel {
-  background:#eaf0f8;
-  color:#7b8daa
+  background:#eff6ff;
+  color:#2563eb
 }
 .expense-icon.stay {
-  background:#eeeaf6;
-  color:#9080a4
+  background:#f1f5f9;
+  color:#475569
 }
 .expense-icon.other {
-  background:#eef2ea;
-  color:#8c9b7d
+  background:#f1f5f9;
+  color:#475569
 }
 .expense-info {
   flex:1;
@@ -513,10 +507,10 @@ h2 .count {
   transform:rotate(180deg)
 }
 .expense-details {
-  background:#fafbf8;
+  background:#f8fafc;
   padding:15px 23px 17px 75px;
   font-size:11px;
-  color:#72806b
+  color:#475569
 }
 .expense-details strong {
   display:block;
@@ -535,15 +529,15 @@ h2 .count {
   width:7px;
   height:7px;
   border-radius:50%;
-  background:#75a983;
-  box-shadow:0 0 0 5px #f0f6ef
+  background:#2563eb;
+  box-shadow:0 0 0 5px #eff6ff
 }
 .suggestion {
   margin:0 20px 15px;
   padding:16px;
-  background:#f7faf5;
-  border:1px solid #e8eee2;
-  border-radius:9px
+  background:#f8fafc;
+  border:1px solid #dbeafe;
+  border-radius:6px
 }
 .suggestion-top {
   display:flex;
@@ -556,8 +550,8 @@ h2 .count {
   width:31px;
   height:31px;
   border-radius:50%;
-  background:#e6eddc;
-  color:#687e57;
+  background:#dbeafe;
+  color:#1d4ed8;
   display:inline-grid;
   place-items:center;
   font-size:11px;
@@ -565,8 +559,8 @@ h2 .count {
   flex-shrink:0
 }
 .avatar:nth-child(even) {
-  background:#eee9e1;
-  color:#9b8665
+  background:#e2e8f0;
+  color:#475569
 }
 .suggestion-names {
   flex:1;
@@ -585,20 +579,20 @@ h2 .count {
   gap:10px
 }
 .suggestion-bottom strong {
-  font:700 23px Manrope,sans-serif;
+  font:700 23px "Segoe UI",Arial,sans-serif;
   color:var(--green)
 }
 .record-button {
   font-size:10px;
   color:var(--green);
-  border:1px solid #cddcc7;
+  border:1px solid #93c5fd;
   background:white;
-  border-radius:6px;
+  border-radius:5px;
   padding:8px 10px;
   font-weight:600
 }
 .record-button:hover {
-  background:#eaf2e4
+  background:#eff6ff
 }
 .panel-footnote {
   border-top:1px solid var(--line);
@@ -644,13 +638,13 @@ h2 .count {
   letter-spacing:.8px;
   text-transform:uppercase;
   color:#929b8b;
-  background:#fafbf8;
+  background:#f8fafc;
   text-align:left;
   padding:12px 23px
 }
 .member-table td {
   padding:15px 23px;
-  border-top:1px solid #edf0e9
+  border-top:1px solid #e2e8f0
 }
 .person-cell {
   display:flex;
@@ -669,16 +663,16 @@ h2 .count {
   white-space:nowrap
 }
 .receives {
-  background:#eaf4ed;
-  color:#367a50
+  background:#eff6ff;
+  color:#1d4ed8
 }
 .owes {
-  background:#fbf2e8;
-  color:#a17b45
+  background:#fff7ed;
+  color:#c2410c
 }
 .settled {
-  background:#f1f3ed;
-  color:#8b9781
+  background:#f1f5f9;
+  color:#475569
 }
 .payment-row {
   display:flex;
@@ -705,7 +699,7 @@ h2 .count {
 .welcome {
   background:#fff;
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:6px;
   text-align:center;
   padding:70px 30px
 }
@@ -722,22 +716,22 @@ h2 .count {
 .large-icon {
   background:var(--pale);
   color:var(--green);
-  border-radius:20px;
+  border-radius:6px;
   padding:15px 22px;
   font-size:35px
 }
 dialog {
   border:0;
-  border-radius:16px;
+  border-radius:8px;
   padding:28px;
   width:min(480px,calc(100% - 30px));
   color:var(--ink);
-  box-shadow:0 30px 90px #102d2633;
+  box-shadow:0 20px 60px #0f172a33;
   max-height:90vh;
   overflow:auto
 }
 dialog::backdrop {
-  background:#183b2d66;
+  background:#0f172a66;
   backdrop-filter:blur(3px)
 }
 .dialog-heading {
@@ -751,8 +745,8 @@ dialog::backdrop {
 }
 .close-button {
   border:0;
-  background:#f2f5ef;
-  color:#7a8971;
+  background:#f1f5f9;
+  color:#475569;
   border-radius:50%;
   width:28px;
   height:28px;
@@ -775,8 +769,8 @@ form label input,form label select {
   display:block;
   width:100%;
   padding:11px 12px;
-  border:1px solid #dfe5db;
-  border-radius:7px;
+  border:1px solid #cbd5e1;
+  border-radius:5px;
   margin-top:8px;
   background:#fff;
   color:var(--ink)
@@ -799,10 +793,10 @@ form input::placeholder {
 }
 .split-preview {
   margin-top:16px;
-  border-radius:8px;
+  border-radius:5px;
   padding:13px;
-  background:#f0f5ea;
-  color:#728664;
+  background:#eff6ff;
+  color:#1e3a8a;
   font-size:11px;
   line-height:1.7
 }
@@ -827,7 +821,7 @@ form input::placeholder {
   margin-top:20px;
   padding:15px;
   background:var(--pale);
-  border-radius:8px;
+  border-radius:5px;
   line-height:1.7;
   font-size:13px
 }
@@ -848,8 +842,8 @@ form input::placeholder {
   left:50%;
   transform:translateX(-50%);
   padding:13px 22px;
-  border-radius:9px;
-  background:#214e3c;
+  border-radius:6px;
+  background:#1e3a8a;
   color:#fff;
   box-shadow:0 6px 30px #122e2930;
   font-size:13px;
