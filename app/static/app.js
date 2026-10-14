@@ -14,14 +14,14 @@ const avatar = (name) => `<span class="avatar" aria-hidden="true">${escapeHTML(i
 const labelFor = (person) => state.members.filter(member => member.name === person.name).length > 1 ? `${person.name} (#${person.id})` : person.name;
 let toastTimer;
 
-async function api(path, data) {
+async function api(path, data, method = 'POST') {
   let response;
   try {
-    response = await fetch(path, data === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    response = await fetch(path, data === undefined ? {} : { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
   } catch {
     throw new Error('Cannot reach the service. Check that it is running, then refresh.');
   }
-  const body = await response.json();
+  const body = response.status === 204 ? null : await response.json();
   if (!response.ok) throw new Error(body.error?.details?.map(detail => detail.message).join('. ') || body.error?.message || 'Something went wrong. Please try again.');
   return body;
 }
@@ -184,7 +184,7 @@ function renderExpenses() {
   $('#expense-list').innerHTML = visible.map(expense => {
     const type = (expense.category || 'other').toLowerCase();
     const symbol = ({ food: '♧', travel: '↗', transport: '↗', stay: '⌂', shopping: '◇' })[type] || '▦';
-    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="view-split">View split</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong>${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
+    return `<details class="expense"><summary><span class="expense-icon ${['travel', 'stay', 'other'].includes(type) ? type : ''}" aria-hidden="true">${symbol}</span><span class="expense-info"><span class="expense-name">${escapeHTML(expense.description)}</span><small>Paid by ${escapeHTML(expense.payer_name)} · ${dateLabel(expense.created_at)}</small></span><span class="expense-amount">${money(paise(expense.amount))}</span><span class="view-split">View split</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="expense-details"><strong>${expense.split_type === 'equal' ? 'Shared equally' : 'Custom shares'} · ${escapeHTML(expense.category || 'Other')}</strong>${expense.receipt_url ? `<a class="receipt-link" href="${expense.receipt_url}" target="_blank" rel="noopener">View receipt ↗</a>` : ''}${expense.splits.map(split => `<div class="share-row"><span>${escapeHTML(split.name)}</span><span>${money(paise(split.amount))}</span></div>`).join('')}</div></details>`;
   }).join('') || empty(state.expenses.length ? 'No matching expenses' : 'No expenses yet', state.expenses.length ? 'Try another search or category.' : state.members.length ? 'Click “Add expense” to record the first bill.' : 'Add group members before adding an expense.', '₹');
 }
 
@@ -321,9 +321,18 @@ $('#expense-form').addEventListener('submit', event => submit(event, async (data
     const values = body.splits.map(split => paise(split.amount));
     if (values.some(value => value === null || value < 0) || values.reduce((sum, value) => sum + value, 0) !== paise(body.amount)) throw new Error('Each share must be a valid amount, and all shares must add up to the expense total.');
   }
-  await api('/expenses', body);
-  return 'Expense saved. Balances updated.';
+  const expense = await api('/expenses', body);
+  const receipt = $('#receipt').files[0];
+  if (receipt) await uploadReceipt(expense.id, receipt);
+  return receipt ? 'Expense and receipt saved.' : 'Expense saved. Balances updated.';
 }));
+
+async function uploadReceipt(expenseId, file) {
+  if (!['image/jpeg', 'image/png', 'application/pdf'].includes(file.type)) throw new Error('Choose a JPG, PNG, or PDF receipt.');
+  if (file.size > 5_000_000) throw new Error('Receipt must be 5 MB or smaller.');
+  const dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
+  await api(`/expenses/${expenseId}/receipt`, { filename: file.name, content_type: file.type, data_base64: dataUrl.split(',')[1] }, 'PUT');
+}
 $('#payment-form').addEventListener('submit', event => submit(event, async (data, group) => {
   await api(`/groups/${group}/settlements`, { from_user_id: state.payment.from_user_id, to_user_id: state.payment.to_user_id, amount: data.get('amount') });
   return 'Payment recorded.';
