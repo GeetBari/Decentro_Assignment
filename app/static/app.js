@@ -221,7 +221,7 @@ document.addEventListener('click', event => {
 });
 $('#refresh').addEventListener('click', () => loadWorkspace());
 $('#export-csv').addEventListener('click', () => {
-  if (state.group) window.location.assign(`/groups/${state.group}/expenses/export.csv`);
+  if (state.group) window.location.assign(`/groups/${state.group}/expenses/export.xlsx`);
 });
 $('#add-member').addEventListener('click', () => openDialog('member-dialog'));
 $('#add-expense').addEventListener('click', () => openDialog('expense-dialog'));

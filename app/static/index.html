@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#12634c">
   <title>Expense Tracker</title>
   <link rel="stylesheet" href="/static/style.css?v=green-cream-insights">
-  <script src="/static/app.js?v=insights" defer></script>
+  <script src="/static/app.js?v=excel-export" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -18,7 +18,7 @@
     <a class="api-link" href="/api-guide" target="_blank" rel="noopener">API guide <span aria-hidden="true">↗</span></a>
   </aside>
   <main>
-    <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="export-csv" class="button subtle" disabled>↓ Export CSV</button><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
+    <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="export-csv" class="button subtle" disabled>↓ Export Excel</button><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
     <div class="page">
       <div id="page-error" class="error-banner" role="alert" hidden></div>
       <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><button class="button primary" id="add-expense" disabled>+ Add expense</button></section>

@@ -1,9 +1,11 @@
 import csv
 from datetime import date, datetime, time, timedelta, timezone
-from io import StringIO
+from io import BytesIO, StringIO
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -237,13 +239,10 @@ def export_expenses_csv(group_id: int, db: DB):
     output = StringIO(newline="")
     writer = csv.writer(output)
     writer.writerow(["Date", "Description", "Category", "Paid by", "Amount (INR)", "Split type"])
-    for expense in expense_views(db, expenses):
-        created_at = datetime.fromisoformat(expense["created_at"].removesuffix("Z")).replace(
-            tzinfo=timezone.utc
-        )
+    for expense, expense_date in export_rows(db, expenses):
         writer.writerow(
             [
-                created_at.astimezone(INDIA).date().isoformat(),
+                expense_date.isoformat(),
                 expense["description"],
                 expense["category"] or "Other",
                 expense["payer_name"],
@@ -255,6 +254,68 @@ def export_expenses_csv(group_id: int, db: DB):
         content=output.getvalue(),
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="group-{group_id}-expenses.csv"'},
+    )
+
+
+def export_rows(db: Session, expenses: list[Expense]):
+    """Return export records using the same India-local date shown in the dashboard."""
+    rows = []
+    for expense in expense_views(db, expenses):
+        created_at = datetime.fromisoformat(expense["created_at"].removesuffix("Z")).replace(
+            tzinfo=timezone.utc
+        )
+        rows.append((expense, created_at.astimezone(INDIA).date()))
+    return rows
+
+
+@router.get(
+    "/groups/{group_id}/expenses/export.xlsx",
+    tags=["3. Expenses"],
+    summary="Download the expense history as an Excel file",
+    response_class=Response,
+)
+def export_expenses_excel(group_id: int, db: DB):
+    get_group(db, group_id)
+    expenses = list(
+        db.scalars(
+            select(Expense)
+            .where(Expense.group_id == group_id)
+            .order_by(Expense.created_at.desc(), Expense.id.desc())
+        )
+    )
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Expenses"
+    headings = ["Date", "Description", "Category", "Paid by", "Amount (INR)", "Split type"]
+    sheet.append(headings)
+    for cell in sheet[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill("solid", fgColor="17684E")
+    for expense, expense_date in export_rows(db, expenses):
+        sheet.append(
+            [
+                expense_date,
+                expense["description"],
+                expense["category"] or "Other",
+                expense["payer_name"],
+                float(expense["amount"]),
+                expense["split_type"],
+            ]
+        )
+    for cell in sheet["A"][1:]:
+        cell.number_format = "dd-mmm-yyyy"
+    for cell in sheet["E"][1:]:
+        cell.number_format = "#,##0.00"
+    for column, width in {"A": 16, "B": 32, "C": 16, "D": 20, "E": 16, "F": 14}.items():
+        sheet.column_dimensions[column].width = width
+    sheet.freeze_panes = "A2"
+    sheet.auto_filter.ref = sheet.dimensions
+    output = BytesIO()
+    workbook.save(output)
+    return Response(
+        content=output.getvalue(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="group-{group_id}-expenses.xlsx"'},
     )
 
 

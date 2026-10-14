@@ -1,8 +1,10 @@
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
+from io import BytesIO
 
 import pytest
+from openpyxl import load_workbook
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -191,6 +193,15 @@ def test_monthly_summary_analytics_and_csv_export(client, trip):
     india_timezone = timezone(timedelta(hours=5, minutes=30))
     india_today = datetime.now(timezone.utc).astimezone(india_timezone).date().isoformat()
     assert f"{india_today},Dinner,food,Mohit,1200.00,equal" in export.text
+    excel = client.get(f"/groups/{group}/expenses/export.xlsx")
+    assert excel.status_code == 200
+    assert excel.headers["content-type"].startswith(
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    sheet = load_workbook(BytesIO(excel.content)).active
+    assert sheet["A2"].number_format == "dd-mmm-yyyy"
+    assert sheet.column_dimensions["A"].width == 16
+    assert sheet["B2"].value == "Taxi"
 
 
 def test_partial_and_full_settlement(client, trip):
