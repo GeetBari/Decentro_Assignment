@@ -20,6 +20,7 @@ from app.schemas import (
     ExpenseOut,
     GroupCreate,
     GroupOut,
+    GroupUpdate,
     MemberCreate,
     MonthlySummaryOut,
     ReceiptCreate,
@@ -78,6 +79,16 @@ def list_users(db: DB, limit: Limit = 100, offset: Offset = 0):
 def add_group(data: GroupCreate, db: DB):
     group = Group(name=data.name, currency=data.currency)
     db.add(group)
+    db.flush()
+    return group
+
+
+@router.patch(
+    "/groups/{group_id}", response_model=GroupOut, tags=["2. Groups"], summary="Rename a group"
+)
+def rename_group(group_id: int, data: GroupUpdate, db: DB):
+    group = get_group(db, group_id)
+    group.name = data.name
     db.flush()
     return group
 

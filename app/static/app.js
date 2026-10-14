@@ -70,6 +70,7 @@ async function selectGroup(id) {
   $('#group-content').hidden = !id;
   $('#add-expense').disabled = true;
   $('#delete-group').disabled = !id;
+  $('#rename-group').disabled = !id;
   $('#export-csv').disabled = !id;
   if (!id) {
     $('#group-title').textContent = 'Your shared expenses';
@@ -282,6 +283,11 @@ $('#export-csv').addEventListener('click', () => {
 });
 $('#add-member').addEventListener('click', () => openDialog('member-dialog'));
 $('#add-expense').addEventListener('click', () => openDialog('expense-dialog'));
+$('#rename-group').addEventListener('click', () => {
+  if (!state.group) return;
+  openDialog('rename-dialog');
+  $('#rename-group-name').value = state.groups.find(group => group.id === state.group).name;
+});
 $('#delete-group').addEventListener('click', async () => {
   if (!state.group || !confirm('Delete this group and all its expenses, receipts, and payments? This cannot be undone.')) return;
   try { await api(`/groups/${state.group}`, {}, 'DELETE'); notify('Group deleted.'); state.group = null; await loadWorkspace(); } catch (error) { showError(error); }
@@ -302,6 +308,12 @@ $('#group-form').addEventListener('submit', event => submit(event, async data =>
   const group = await api('/groups', { name });
   state.group = group.id;
   return 'Group created. Add members next.';
+}));
+$('#rename-form').addEventListener('submit', event => submit(event, async (data, group) => {
+  const name = data.get('name').trim();
+  if (!name) throw new Error('Enter a group name.');
+  await api(`/groups/${group}`, { name }, 'PATCH');
+  return 'Group renamed.';
 }));
 $('#member-form').addEventListener('submit', event => submit(event, async (data, group) => {
   let user;

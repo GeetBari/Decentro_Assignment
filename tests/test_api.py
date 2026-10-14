@@ -46,6 +46,14 @@ def test_users_groups_and_duplicate_membership(client, trip):
     assert client.get("/groups?offset=-1").status_code == 422
 
 
+def test_rename_group(client, trip):
+    group, _ = trip
+    result = client.patch(f"/groups/{group}", json={"name": "Weekend plans"})
+    assert result.status_code == 200
+    assert result.json()["name"] == "Weekend plans"
+    assert client.patch(f"/groups/{group}", json={"name": " "}).status_code == 422
+
+
 @pytest.mark.parametrize(
     "amount", [0, -1, "1.001", "NaN", "Infinity", True, "1000000000.01", None, "abc"]
 )

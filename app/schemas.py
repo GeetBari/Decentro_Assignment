@@ -44,6 +44,10 @@ class GroupCreate(InputModel):
     currency: Literal["INR"] = "INR"
 
 
+class GroupUpdate(InputModel):
+    name: Name
+
+
 class MemberCreate(InputModel):
     user_id: PositiveId
 

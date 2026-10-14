@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#12634c">
   <title>Expense Tracker</title>
   <link rel="stylesheet" href="/static/style.css?v=green-cream-insights">
-  <script src="/static/app.js?v=member-names" defer></script>
+  <script src="/static/app.js?v=rename-group" defer></script>
 </head>
 <body>
   <aside class="sidebar">
@@ -21,7 +21,7 @@
     <header class="topbar"><div><span class="muted">Workspace</span><span class="crumb">/</span>Overview</div><div class="top-actions"><span class="currency-pill">INR · ₹</span><button id="export-csv" class="button subtle" disabled>↓ Export Excel</button><button id="refresh" class="button subtle" aria-label="Refresh dashboard">↻ Refresh</button></div></header>
     <div class="page">
       <div id="page-error" class="error-banner" role="alert" hidden></div>
-      <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><div class="heading-actions"><button class="button danger" id="delete-group" disabled>Delete group</button><button class="button primary" id="add-expense" disabled>+ Add expense</button></div></section>
+      <section class="page-heading"><div><div class="eyebrow">GROUP EXPENSES</div><h1 id="group-title">Your shared expenses</h1><p id="group-description">Choose a group to see expenses, balances, and payments.</p></div><div class="heading-actions"><button class="button secondary" id="rename-group" disabled>Rename group</button><button class="button danger" id="delete-group" disabled>Delete group</button><button class="button primary" id="add-expense" disabled>+ Add expense</button></div></section>
       <section id="welcome" class="welcome" hidden><span class="large-icon">+</span><h2>Create your first group</h2><p>Add the people in the group, then record shared expenses.</p><button class="button primary" data-open="group-dialog">Create group</button></section>
       <div id="group-content" hidden>
         <section class="stats" aria-label="Group summary">
@@ -48,6 +48,7 @@
   <div id="toast" role="status" aria-live="polite" hidden></div>
 
   <dialog id="group-dialog"><form id="group-form"><div class="dialog-heading"><div><span class="eyebrow">NEW GROUP</span><h2>Create a group</h2></div><button type="button" class="close-button" data-close aria-label="Close dialog">×</button></div><p class="dialog-description">For a trip, household, or any shared expense.</p><label>Group name<input name="name" placeholder="e.g. Goa weekend" required maxlength="100" autocomplete="off"></label><p class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="button secondary" data-close>Cancel</button><button type="submit" class="button primary">Create group</button></div></form></dialog>
+  <dialog id="rename-dialog"><form id="rename-form"><div class="dialog-heading"><div><span class="eyebrow">GROUP</span><h2>Rename group</h2></div><button type="button" class="close-button" data-close aria-label="Close dialog">×</button></div><label>New group name<input id="rename-group-name" name="name" required maxlength="100" autocomplete="off"></label><p class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="button secondary" data-close>Cancel</button><button type="submit" class="button primary">Save name</button></div></form></dialog>
 
   <dialog id="member-dialog"><form id="member-form"><div class="dialog-heading"><div><span class="eyebrow">MEMBERS</span><h2>Add a member</h2></div><button type="button" class="close-button" data-close aria-label="Close dialog">×</button></div><p class="dialog-description">New members are included in future expenses. Existing expenses do not change.</p><label>Add someone<select id="member-mode" name="mode"><option value="new">Create a new person</option><option value="existing">Choose an existing person</option></select></label><label id="new-person-field">Name<input id="person-name" name="name" maxlength="100" placeholder="e.g. Rahul" required autocomplete="off"></label><label id="existing-person-field" hidden>Existing person<select id="existing-user" name="user_id" disabled></select></label><p class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="button secondary" data-close>Cancel</button><button type="submit" class="button primary">Add to group</button></div></form></dialog>
 
