@@ -4,8 +4,8 @@ Verified locally on 14 October 2026.
 
 | Check | Result |
 | --- | --- |
-| Python test suite | 46 passed on Windows / Python 3.13.2 |
-| Statement coverage | 99% (447 statements, 4 uncovered) |
+| Python test suite | 47 passed on Windows / Python 3.13.2, including dashboard/asset routing |
+| Backend baseline statement coverage | 99% (447 statements, 4 uncovered), measured before the dashboard addition |
 | Ruff lint and formatting | Passed |
 | Docker image build | Passed with Python 3.13 slim |
 | Compose startup and health check | Healthy |
@@ -15,6 +15,11 @@ Verified locally on 14 October 2026.
 | Persistent database | Application restart test passed |
 | Concurrent settlements | Two competing INR 300 payments against INR 400 debt yielded one 201 and one 422 |
 | Atomic expense writes | Simulated share insertion failure rolled back the expense and its shares |
+| Dashboard browser checks | Group creation, new/existing members, equal expense preview/save, valid and invalid custom splits, search, and partial payment passed |
+| Responsive layout | Desktop and 390px phone viewport visually checked; narrow-screen amount wrapping corrected |
+| Browser console | No errors observed during the dashboard checks |
+
+The dashboard is a same-origin HTML/CSS/JavaScript client of the existing API. Browser checks used a separate sample group, Weekend trip, and persisted sample records in the local Docker database. They do not change the repository's source data or seed real users automatically.
 
 The uncovered statements are the database exception-handler responses for integrity/operational errors. Database constraints themselves are tested. One upstream Starlette/AnyIO deprecation warning appears in the test environment; it does not fail the suite.
 

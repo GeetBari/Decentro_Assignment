@@ -35,6 +35,7 @@ python -m uvicorn app.main:app --reload
 
 If PowerShell blocks activation, use `.\.venv\Scripts\python.exe` instead of `python`; changing the execution policy is unnecessary.
 
+- Visual dashboard: [Together](http://127.0.0.1:8000/)
 - Interactive API documentation: [Swagger UI](http://127.0.0.1:8000/docs)
 - Alternative API documentation: [ReDoc](http://127.0.0.1:8000/redoc)
 - Machine-readable schema: [OpenAPI JSON](http://127.0.0.1:8000/openapi.json)
@@ -45,6 +46,10 @@ Tables are created on startup. The default SQLite database is `expenses.db` in t
 The repository is private during development. Reviewers need access or the repository must be made public before submission.
 
 ## Run the demo
+
+For a visual walkthrough, open the dashboard at `/`. Create a group, add members, and choose **Add expense**. The form previews each person's share. **Who pays whom** shows suggested payments; **Record payment** logs money already paid back. Click an expense to see its saved shares. Search and category filters narrow the history. Everything uses the same backend and SQLite database as the API.
+
+The dashboard is plain HTML, CSS, and JavaScript served by FastAPI from `app/static/`; no Node.js build is required. It works on desktop and mobile. Google Fonts enhances typography when available; system fonts work offline. The page refreshes after its own writes; use Refresh to see changes made elsewhere.
 
 With the API running, open a second terminal in the activated environment:
 
@@ -153,6 +158,6 @@ Stopping the service keeps its database volume. `requirements.txt` contains runt
 3. Alembic schema migrations and PostgreSQL if concurrent write volume grows.
 4. Audited expense corrections and membership removal rules.
 5. SQL aggregation or cached summaries for very large ledgers.
-6. Receipt attachments, a small UI, and explicit multi-currency rules.
+6. Receipt attachments and explicit multi-currency rules.
 
 Lifecycle and database patterns were checked against the [FastAPI documentation](https://fastapi.tiangolo.com/advanced/events/) and [SQLAlchemy SQLite documentation](https://docs.sqlalchemy.org/en/20/dialects/sqlite.html).

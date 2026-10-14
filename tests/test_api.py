@@ -287,6 +287,16 @@ def test_docs_and_health(client):
     assert "/balances" in schema["paths"]
 
 
+def test_dashboard_and_assets_are_served(client):
+    page = client.get("/")
+    assert page.status_code == 200
+    assert "text/html" in page.headers["content-type"]
+    assert "Who pays whom" in page.text
+    assert client.get("/static/app.js").status_code == 200
+    assert client.get("/static/style.css").status_code == 200
+    assert client.get("/static/missing.js").status_code == 404
+
+
 def test_group_settled_flag(client, trip):
     group, users = trip
     assert client.get("/balances", params={"group_id": group}).json()["is_settled"]

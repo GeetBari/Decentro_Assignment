@@ -1,10 +1,12 @@
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import IntegrityError, OperationalError
 from starlette.exceptions import HTTPException
 
@@ -34,6 +36,13 @@ def create_app(database_url: str | None = None) -> FastAPI:
         ),
     )
     app.state.engine = engine
+    static_directory = Path(__file__).parent / "static"
+    app.mount("/static", StaticFiles(directory=static_directory), name="static")
+
+    @app.get("/", include_in_schema=False)
+    def dashboard():
+        return FileResponse(static_directory / "index.html")
+
     app.include_router(
         router,
         responses={

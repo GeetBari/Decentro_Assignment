@@ -35,6 +35,7 @@ The attached document specifies an **Expense Sharing Service**. Its filename men
 | Unit tests | Money and algorithm tests, plus API/database integration tests |
 | Docker | Dockerfile and Compose with persistent volume and health check |
 | Postman collection | `docs/postman_collection.json`, generated IDs captured as variables |
+| Additional visual dashboard | `/` serves group/member forms, expense forms with split preview, balances, suggested payments, and payment history |
 | Demo video | Not recorded; `docs/DEMO.md` supplies a walkthrough and `scripts/demo.py` runs the example |
 
 ## Intentional API differences

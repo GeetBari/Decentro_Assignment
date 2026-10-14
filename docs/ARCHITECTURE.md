@@ -2,6 +2,8 @@
 
 ## Request flow
 
+The optional Together dashboard is served at `/` using `FileResponse`, with HTML, CSS, and JavaScript under `app/static/`. It calls the same JSON endpoints as Swagger and Postman; no duplicate financial logic or separate database is introduced. Its split preview uses integer paise, and the backend validates every write. The browser displays net settlement suggestions rather than asking users to interpret pairwise ledger cycles.
+
 Pydantic validates request shape, types, precision, and custom split totals. Routes delegate business rules to services. SQLAlchemy uses parameterized queries and persists data inside a request transaction. Explicit response schemas validate returned data.
 
 The application factory accepts a database URL so tests can use isolated on-disk SQLite databases. Startup calls `Base.metadata.create_all`. This initializes new databases; it does not migrate existing schemas.
