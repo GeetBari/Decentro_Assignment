@@ -1,32 +1,44 @@
 1
-00:00:00,000 --> 00:00:05,000
-Expense Sharing Service
-FastAPI, SQLite, and a browser dashboard
+00:00:00,000 --> 00:00:11,000
+Expense Sharing Service dashboard
+Group totals, member balances, and spending analytics
 
 2
-00:00:05,000 --> 00:00:13,000
-Load a demo group with members and sample expenses.
+00:00:11,000 --> 00:00:22,000
+Select a group to view its expenses, suggested repayments, and members.
 
 3
-00:00:13,000 --> 00:00:25,000
-Add an expense, choose the payer, category, and split type.
+00:00:22,000 --> 00:00:38,000
+Add an expense with a description, category, payer, and optional receipt.
 
 4
-00:00:25,000 --> 00:00:37,000
-Balances and each member's share update automatically.
+00:00:38,000 --> 00:00:51,000
+Choose an equal split or enter custom amounts for each member.
 
 5
-00:00:37,000 --> 00:00:49,000
-Use date filters and review monthly spending analytics.
+00:00:51,000 --> 00:01:04,000
+The new expense updates totals, balances, and category spending automatically.
 
 6
-00:00:49,000 --> 00:01:01,000
-Settlement suggestions reduce the payments needed to settle up.
+00:01:04,000 --> 00:01:16,000
+Filter expense history by date, category, or description.
 
 7
-00:01:01,000 --> 00:01:10,000
-Export a formatted Excel report of the expense history.
+00:01:16,000 --> 00:01:29,000
+Settlement suggestions show the simplest payments needed to settle the group.
 
 8
-00:01:10,000 --> 00:01:18,000
-Interactive FastAPI documentation and Postman collection are included.
+00:01:29,000 --> 00:01:41,000
+Record a full or partial payment after money has been paid.
+
+9
+00:01:41,000 --> 00:01:53,000
+Export the group expense history to a formatted Excel report.
+
+10
+00:01:53,000 --> 00:02:05,000
+The friendly API guide explains how the dashboard talks to the server.
+
+11
+00:02:05,000 --> 00:02:18,000
+FastAPI documentation provides an interactive reference for every endpoint.
