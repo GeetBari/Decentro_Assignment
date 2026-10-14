@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -187,7 +188,9 @@ def test_monthly_summary_analytics_and_csv_export(client, trip):
     assert export.status_code == 200
     assert export.headers["content-type"].startswith("text/csv")
     assert "Date,Description,Category,Paid by,Amount (INR),Split type" in export.text
-    assert "Dinner,food,Mohit,1200.00,equal" in export.text
+    india_timezone = timezone(timedelta(hours=5, minutes=30))
+    india_today = datetime.now(timezone.utc).astimezone(india_timezone).date().isoformat()
+    assert f"{india_today},Dinner,food,Mohit,1200.00,equal" in export.text
 
 
 def test_partial_and_full_settlement(client, trip):

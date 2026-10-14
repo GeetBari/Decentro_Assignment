@@ -1,5 +1,5 @@
 import csv
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from io import StringIO
 from typing import Annotated
 
@@ -38,6 +38,8 @@ router = APIRouter()
 DB = Annotated[Session, Depends(get_db, scope="function")]
 Limit = Annotated[int, Query(ge=1, le=100)]
 Offset = Annotated[int, Query(ge=0)]
+# India does not observe daylight saving time, so this works without an external time-zone database.
+INDIA = timezone(timedelta(hours=5, minutes=30))
 
 
 @router.get("/health", tags=["Start here"], summary="Check that the service is running")
@@ -236,9 +238,12 @@ def export_expenses_csv(group_id: int, db: DB):
     writer = csv.writer(output)
     writer.writerow(["Date", "Description", "Category", "Paid by", "Amount (INR)", "Split type"])
     for expense in expense_views(db, expenses):
+        created_at = datetime.fromisoformat(expense["created_at"].removesuffix("Z")).replace(
+            tzinfo=timezone.utc
+        )
         writer.writerow(
             [
-                expense["created_at"][:10],
+                created_at.astimezone(INDIA).date().isoformat(),
                 expense["description"],
                 expense["category"] or "Other",
                 expense["payer_name"],
