@@ -31,9 +31,33 @@ def create_app(database_url: str | None = None) -> FastAPI:
         version="1.0.0",
         lifespan=lifespan,
         description=(
-            "Track INR group expenses, exact splits, balances, and settlements. "
-            "Money responses are decimal strings. This is an assignment demo without authentication."
+            "## Start here\n\n"
+            "Use the [plain-English API guide](/api-guide) if you are new to the project. "
+            "This page is the interactive reference for testing individual endpoints.\n\n"
+            "### Recommended order\n\n"
+            "1. Create people with **Users**.\n"
+            "2. Create a group, then add those people as **Group members**.\n"
+            "3. Add an **Expense**. Omit `splits` for an equal split, or provide exact custom shares.\n"
+            "4. Check **Balances** and **Settlement suggestions**.\n"
+            "5. Record a **Settlement** after money has actually been paid.\n\n"
+            'All amounts are INR decimal strings such as `"1200.00"`. This demo has no authentication.'
         ),
+        openapi_tags=[
+            {"name": "Start here", "description": "A quick health check for the running service."},
+            {"name": "1. People", "description": "Create people before adding them to a group."},
+            {
+                "name": "2. Groups",
+                "description": "Create groups and decide who shares future expenses.",
+            },
+            {
+                "name": "3. Expenses",
+                "description": "Record bills and split them equally or by custom amounts.",
+            },
+            {
+                "name": "4. Settle up",
+                "description": "See balances, get suggested payments, and record repayments.",
+            },
+        ],
     )
     app.state.engine = engine
     static_directory = Path(__file__).parent / "static"
@@ -42,6 +66,10 @@ def create_app(database_url: str | None = None) -> FastAPI:
     @app.get("/", include_in_schema=False)
     def dashboard():
         return FileResponse(static_directory / "index.html")
+
+    @app.get("/api-guide", include_in_schema=False)
+    def api_guide():
+        return FileResponse(static_directory / "api-guide.html")
 
     app.include_router(
         router,

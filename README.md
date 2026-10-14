@@ -36,6 +36,7 @@ python -m uvicorn app.main:app --reload
 If PowerShell blocks activation, use `.\.venv\Scripts\python.exe` instead of `python`; changing the execution policy is unnecessary.
 
 - Visual dashboard: [Together](http://127.0.0.1:8000/)
+- Plain-English API guide: [API guide](http://127.0.0.1:8000/api-guide)
 - Interactive API documentation: [Swagger UI](http://127.0.0.1:8000/docs)
 - Alternative API documentation: [ReDoc](http://127.0.0.1:8000/redoc)
 - Machine-readable schema: [OpenAPI JSON](http://127.0.0.1:8000/openapi.json)

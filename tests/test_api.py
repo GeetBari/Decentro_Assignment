@@ -282,9 +282,11 @@ def test_missing_groups_return_404(client, path):
 def test_docs_and_health(client):
     assert client.get("/health").json() == {"status": "ok"}
     assert client.get("/docs").status_code == 200
+    assert client.get("/api-guide").status_code == 200
     schema = client.get("/openapi.json").json()
     assert "/expenses" in schema["paths"]
     assert "/balances" in schema["paths"]
+    assert schema["paths"]["/expenses"]["post"]["summary"] == "Add a shared bill"
 
 
 def test_dashboard_and_assets_are_served(client):

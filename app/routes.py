@@ -35,13 +35,15 @@ Limit = Annotated[int, Query(ge=1, le=100)]
 Offset = Annotated[int, Query(ge=0)]
 
 
-@router.get("/health", tags=["Health"])
+@router.get("/health", tags=["Start here"], summary="Check that the service is running")
 def health(db: DB):
     db.execute(select(1))
     return {"status": "ok"}
 
 
-@router.post("/users", response_model=UserOut, status_code=201, tags=["Users"])
+@router.post(
+    "/users", response_model=UserOut, status_code=201, tags=["1. People"], summary="Create a person"
+)
 def add_user(data: UserCreate, db: DB):
     user = User(name=data.name)
     db.add(user)
@@ -49,12 +51,18 @@ def add_user(data: UserCreate, db: DB):
     return user
 
 
-@router.get("/users", response_model=list[UserOut], tags=["Users"])
+@router.get("/users", response_model=list[UserOut], tags=["1. People"], summary="List people")
 def list_users(db: DB, limit: Limit = 100, offset: Offset = 0):
     return db.scalars(select(User).order_by(User.id).limit(limit).offset(offset)).all()
 
 
-@router.post("/groups", response_model=GroupOut, status_code=201, tags=["Groups"])
+@router.post(
+    "/groups",
+    response_model=GroupOut,
+    status_code=201,
+    tags=["2. Groups"],
+    summary="Create a group",
+)
 def add_group(data: GroupCreate, db: DB):
     group = Group(name=data.name, currency=data.currency)
     db.add(group)
@@ -62,12 +70,18 @@ def add_group(data: GroupCreate, db: DB):
     return group
 
 
-@router.get("/groups", response_model=list[GroupOut], tags=["Groups"])
+@router.get("/groups", response_model=list[GroupOut], tags=["2. Groups"], summary="List groups")
 def list_groups(db: DB, limit: Limit = 100, offset: Offset = 0):
     return db.scalars(select(Group).order_by(Group.id).limit(limit).offset(offset)).all()
 
 
-@router.post("/groups/{group_id}/members", response_model=UserOut, status_code=201, tags=["Groups"])
+@router.post(
+    "/groups/{group_id}/members",
+    response_model=UserOut,
+    status_code=201,
+    tags=["2. Groups"],
+    summary="Add a person to a group",
+)
 def add_member(group_id: int, data: MemberCreate, db: DB):
     get_group(db, group_id)
     user = get_user(db, data.user_id)
@@ -78,18 +92,34 @@ def add_member(group_id: int, data: MemberCreate, db: DB):
     return user
 
 
-@router.get("/groups/{group_id}/members", response_model=list[UserOut], tags=["Groups"])
+@router.get(
+    "/groups/{group_id}/members",
+    response_model=list[UserOut],
+    tags=["2. Groups"],
+    summary="List a group's members",
+)
 def list_members(group_id: int, db: DB):
     get_group(db, group_id)
     return group_members(db, group_id)
 
 
-@router.post("/expenses", response_model=ExpenseOut, status_code=201, tags=["Expenses"])
+@router.post(
+    "/expenses",
+    response_model=ExpenseOut,
+    status_code=201,
+    tags=["3. Expenses"],
+    summary="Add a shared bill",
+)
 def add_expense(data: ExpenseCreate, db: DB):
     return expense_views(db, [create_expense(db, data)])[0]
 
 
-@router.get("/groups/{group_id}/expenses", response_model=list[ExpenseOut], tags=["Expenses"])
+@router.get(
+    "/groups/{group_id}/expenses",
+    response_model=list[ExpenseOut],
+    tags=["3. Expenses"],
+    summary="View a group's expense history",
+)
 def list_expenses(
     group_id: int,
     db: DB,
@@ -122,14 +152,22 @@ def list_expenses(
     return expense_views(db, expenses)
 
 
-@router.get("/balances", response_model=BalanceOut, tags=["Balances"])
+@router.get(
+    "/balances",
+    response_model=BalanceOut,
+    tags=["4. Settle up"],
+    summary="See what each person paid, owes, or is owed",
+)
 def balances(db: DB, group_id: Annotated[int, Query(gt=0)]):
     """Pairwise ledger balances and member net positions. Positive net means receivable."""
     return balance_view(db, group_id)
 
 
 @router.get(
-    "/groups/{group_id}/settlement-suggestions", response_model=SuggestionsOut, tags=["Balances"]
+    "/groups/{group_id}/settlement-suggestions",
+    response_model=SuggestionsOut,
+    tags=["4. Settle up"],
+    summary="Get the simplest suggested repayments",
 )
 def suggestions(group_id: int, db: DB):
     """Suggested payments clear group net balances; no records are changed."""
@@ -140,14 +178,18 @@ def suggestions(group_id: int, db: DB):
     "/groups/{group_id}/settlements",
     response_model=SettlementOut,
     status_code=201,
-    tags=["Settlements"],
+    tags=["4. Settle up"],
+    summary="Record money that has been paid back",
 )
 def add_settlement(group_id: int, data: SettlementCreate, db: DB):
     return settlement_view(create_settlement(db, group_id, data))
 
 
 @router.get(
-    "/groups/{group_id}/settlements", response_model=list[SettlementOut], tags=["Settlements"]
+    "/groups/{group_id}/settlements",
+    response_model=list[SettlementOut],
+    tags=["4. Settle up"],
+    summary="View recorded repayments",
 )
 def list_settlements(group_id: int, db: DB, limit: Limit = 100, offset: Offset = 0):
     get_group(db, group_id)

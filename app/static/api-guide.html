@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17684e">
+  <title>API guide · Together</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .guide-page{max-width:1000px;margin:0 auto;padding:56px 28px 80px}.guide-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:56px}.guide-nav a{font-weight:700;color:var(--green)}.guide-hero{max-width:670px;margin-bottom:44px}.guide-hero h1{font:800 clamp(34px,6vw,58px) Manrope,sans-serif;letter-spacing:-2.5px;margin:12px 0}.guide-hero p{font-size:18px;line-height:1.65;color:var(--muted)}.guide-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:25px 0 46px}.guide-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}.guide-card .step{color:var(--green);font-weight:800;font-size:12px;letter-spacing:1.1px}.guide-card h2{font:750 21px Manrope,sans-serif;margin:10px 0 8px}.guide-card p{line-height:1.55;color:var(--muted);margin:0}.endpoint{display:inline-block;margin-top:15px;background:var(--pale);color:var(--green-dark);padding:7px 9px;border-radius:6px;font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace}.example{background:#173b30;color:#ebf3ed;border-radius:14px;padding:25px;overflow:auto;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}.callout{background:var(--pale);border-radius:14px;padding:22px 24px;line-height:1.6}.callout strong{color:var(--green-dark)}@media(max-width:640px){.guide-page{padding:30px 18px 54px}.guide-nav{margin-bottom:34px}.guide-steps{grid-template-columns:1fr}.guide-nav .brand small{display:none}}
+  </style>
+</head>
+<body>
+  <main class="guide-page">
+    <nav class="guide-nav"><a class="brand" href="/"><span class="brand-icon">t<span>•</span></span><span>together<small>Good times. Shared fairly.</small></span></a><a href="/docs">Developer tester ↗</a></nav>
+    <section class="guide-hero"><div class="eyebrow">API GUIDE</div><h1>How the app talks to the server.</h1><p>This page explains the API in everyday language. The dashboard already uses these endpoints for you. Open the developer tester only when you want to send requests yourself.</p></section>
+    <section class="guide-steps">
+      <article class="guide-card"><span class="step">STEP 1</span><h2>Create people</h2><p>Make a person for each friend, flatmate, or traveller who will share expenses.</p><span class="endpoint">POST /users</span></article>
+      <article class="guide-card"><span class="step">STEP 2</span><h2>Create a group</h2><p>Make a group such as “Goa weekend”, then add those people to it.</p><span class="endpoint">POST /groups</span><br><span class="endpoint">POST /groups/{group_id}/members</span></article>
+      <article class="guide-card"><span class="step">STEP 3</span><h2>Add a bill</h2><p>Say what the bill was, how much it cost, and who paid. Leave splits out to divide it equally.</p><span class="endpoint">POST /expenses</span></article>
+      <article class="guide-card"><span class="step">STEP 4</span><h2>Settle up</h2><p>See each person’s balance, get suggested repayments, then record money paid back.</p><span class="endpoint">GET /balances</span><br><span class="endpoint">POST /groups/{group_id}/settlements</span></article>
+    </section>
+    <section class="panel" style="padding:28px;margin-bottom:22px"><div class="panel-heading"><div><h2>A complete example</h2><p>Create a ₹1,200 dinner bill paid by Mohit and shared equally among three group members.</p></div></div><pre class="example">POST /expenses
+
+{
+  "group_id": 1,
+  "paid_by": 1,
+  "amount": "1200.00",
+  "description": "Dinner",
+  "category": "Food"
+}
+
+Result: each current member gets a ₹400.00 share.</pre></section>
+    <section class="callout"><strong>Two useful details:</strong> all amounts are sent and returned as decimal strings such as <code>"1200.00"</code>, and a settlement only records a payment that has already happened. It never moves money itself.</section>
+  </main>
+</body>
+</html>
